@@ -4,7 +4,6 @@ import me.night0721.nv.NullValkyrie;
 import org.bukkit.ChatColor;
 
 import java.lang.reflect.Field;
-import java.util.logging.LogRecord;
 
 public class Util {
     public static String centerText(String text, int lineLength) {

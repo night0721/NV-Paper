@@ -1,6 +1,5 @@
 package me.night0721.nv.discord;
 
-import me.night0721.nv.NullValkyrie;
 import me.night0721.nv.util.Util;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

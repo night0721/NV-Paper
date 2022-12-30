@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class PerPlayerHologram {
-    public static HashMap<Integer, ArmorStand[]> holograms = new HashMap<>();
+    public static final HashMap<Integer, ArmorStand[]> holograms = new HashMap<>();
 
     public PerPlayerHologram(Player player, String[] lines) {
         spawnLine(player, lines);

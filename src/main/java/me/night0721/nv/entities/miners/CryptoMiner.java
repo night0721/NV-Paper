@@ -39,9 +39,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CryptoMiner {
     protected String name;
-    protected MinerType type;
     protected int level;
-    protected double rate;
+    protected final MinerType type;
+    protected final double rate;
     protected final long lastclaim;
     protected final double x;
     protected final double y;
