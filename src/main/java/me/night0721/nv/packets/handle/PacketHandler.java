@@ -23,6 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -62,7 +63,7 @@ public class PacketHandler extends ChannelDuplexHandler {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext c, Object packet) throws Exception {
+    public void channelRead(@NotNull ChannelHandlerContext c, Object packet) throws Exception {
         if (packet.getClass().getSimpleName().equalsIgnoreCase("PacketPlayInUseEntity")) {
             ServerboundInteractPacket pk = (ServerboundInteractPacket) packet;
             int entityID = (int) Util.getFieldValue(packet, "a");

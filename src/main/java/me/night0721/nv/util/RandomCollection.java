@@ -43,7 +43,6 @@ public class RandomCollection<E> {
         }
         return Math.round((c / total) * 100);
     }
-    // write a method to get all the values in the collection so you can iterate over them
     public List<E> getAll() {
         return new ArrayList<>(map.values());
     }

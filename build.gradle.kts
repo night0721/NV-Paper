@@ -3,8 +3,8 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "1.4.0"
-    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.2" // Generates plugin.yml
+    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -26,32 +26,25 @@ dependencies {
     }
     implementation("org.mongodb:mongo-java-driver:3.12.11")
     paperDevBundle("1.19.2-R0.1-SNAPSHOT")
-    // paperweightDevBundle("com.example.paperfork", "1.19.3-R0.1-SNAPSHOT")
-
-    // You will need to manually specify the full dependency if using the groovy gradle dsl
-    // (paperDevBundle and paperweightDevBundle functions do not work in groovy)
-    // paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.19.3-R0.1-SNAPSHOT")
 }
 
 tasks {
-    // Configure reobfJar to run when invoking the build task
     assemble {
-        dependsOn(reobfJar)
+        dependsOn(shadowJar)
+        dependsOn(reobfJar) // comment out this if using runMojangMappedServer
     }
-
     compileJava {
-        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
     }
     javadoc {
-        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.encoding = Charsets.UTF_8.name()
     }
     processResources {
-        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
+        filteringCharset = Charsets.UTF_8.name()
     }
-
     reobfJar {
-        outputJar.set(layout.buildDirectory.file("E:\\Files\\NV\\plugins\\NullValkyrie.jar"))
+        outputJar.set(layout.buildDirectory.file("C:\\Users\\NK\\OneDrive\\Desktop\\.nky\\Coding\\Java\\NV-Paper\\run\\plugins\\NullValkyrie.jar"))
     }
 }
 bukkit {

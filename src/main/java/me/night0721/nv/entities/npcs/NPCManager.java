@@ -35,7 +35,6 @@ public class NPCManager {
     public static HashMap<Integer, ServerPlayer> getNPCs() {
         return NPCs;
     }
-    @SuppressWarnings("ConstantConditions")
     public static void createNPC(Player player, String name) { // name must be less than 16 characters including color codes
         ServerPlayer sp = ((CraftPlayer) player).getHandle();
         MinecraftServer server = sp.server;
@@ -88,7 +87,6 @@ public class NPCManager {
             pc.send(new ClientboundSetEquipmentPacket(npc.getBukkitEntity().getEntityId(), itemList));
         }
     }
-    @SuppressWarnings("ConstantConditions")
     public static void reloadNPC(List<HashMap<String, Object>> npcs) {
         for (HashMap<String, Object> npc : npcs) {
             Location location = new Location(Bukkit.getWorld((String) npc.get("world")), (double) npc.get("x"), (double) npc.get("y"), (double) npc.get("z"), (int) npc.get("yaw"), (int) npc.get("pitch"));
