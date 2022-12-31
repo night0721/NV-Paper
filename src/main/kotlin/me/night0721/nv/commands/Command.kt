@@ -11,7 +11,7 @@ abstract class Command(command: String?, aliases: Array<String?>, description: S
         command!!
     ) {
     init {
-        this.aliases = Arrays.asList(*aliases)
+        this.aliases = listOf(*aliases)
         setDescription(description!!)
         this.permission = permission
         try {
@@ -32,10 +32,10 @@ abstract class Command(command: String?, aliases: Array<String?>, description: S
     }
 
     @Throws(IllegalArgumentException::class)
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): MutableList<String> {
         return onTabComplete(sender, args)
     }
 
     abstract fun onCommand(sender: CommandSender, args: Array<String>)
-    abstract fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String>
+    abstract fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>
 }
