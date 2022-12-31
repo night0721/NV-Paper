@@ -5,4 +5,4 @@ pluginManagement {
   }
 }
 
-rootProject.name = "NV-Paper"
+rootProject.name = "NVPaper"

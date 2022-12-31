@@ -48,7 +48,7 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
     }
     reobfJar {
-        outputJar.set(layout.buildDirectory.file("C:\\Users\\NK\\OneDrive\\Desktop\\.nky\\Coding\\Kotlin\\NVPaper\\run\\plugins\\NullValkyrie.jar"))
+        //outputJar.set(layout.buildDirectory.file("C:\\Users\\NK\\OneDrive\\Desktop\\.nky\\Coding\\Kotlin\\NVPaper\\run\\plugins\\NullValkyrie.jar"))
     }
 }
 bukkit {
