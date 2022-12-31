@@ -1,39 +1,29 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import me.night0721.nv.entities.npcs.NPCManager;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
+import me.night0721.nv.entities.npcs.NPCManager
+import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.util.StringUtil
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class NPCCommand extends Command {
-    public NPCCommand() {
-        super("npc", new String[]{}, "NPCs", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            if (args.length == 0) {
-                player.sendMessage(ChatColor.RED + "Invalid command");
-                return;
+class NPCCommand : Command("npc", arrayOf(), "NPCs", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        if (sender is Player) {
+            if (args.size == 0) {
+                sender.sendMessage(ChatColor.RED.toString() + "Invalid command")
+                return
             }
-            if (args[0].equalsIgnoreCase("new")) {
-                NPCManager.createNPC(player, args[1]);
+            if (args[0].equals("new", ignoreCase = true)) {
+                NPCManager.createNPC(sender, args[1])
             }
         }
-
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            List<String> cc = List.of("new", "list");
-            return StringUtil.copyPartialMatches(args[0], cc, new ArrayList<>());
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+        if (args.size == 1) {
+            val cc = listOf("new", "list")
+            return StringUtil.copyPartialMatches(args[0], cc, ArrayList())
         }
-        return new ArrayList<>();
+        return ArrayList()
     }
 }

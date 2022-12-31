@@ -1,25 +1,14 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-
-public class CraftCommand extends Command {
-
-    public CraftCommand() {
-        super("craft", new String[]{"ct", "crafting", "craftingtable"}, "Open crafting table", "");
+class CraftCommand : Command("craft", arrayOf<String?>("ct", "crafting", "craftingtable"), "Open crafting table", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        (sender as? Player)?.openWorkbench(null, true)
     }
 
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            player.openWorkbench(null, true);
-        }
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
+        return null
     }
 }

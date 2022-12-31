@@ -1,60 +1,70 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import com.mongodb.client.MongoCursor;
-import me.night0721.nv.entities.miners.CryptoMiner;
-import me.night0721.nv.entities.miners.MinerType;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import me.night0721.nv.entities.miners.CryptoMiner
+import me.night0721.nv.entities.miners.MinerType
+import org.bson.Document
+import org.bson.conversions.Bson
+import org.bukkit.*
 
-import java.util.HashMap;
-
-public class MinerDataManager {
-    public static void setMiner(String name, MinerType type, int level, double rate, boolean enabled, long lastclaim, Location location) {
-        Document newDocument = new Document();
-        newDocument.put("ID", new DatabaseManager().getMinersDB().countDocuments() + 1);
-        newDocument.put("Name", name);
-        newDocument.put("Material", type.getName());
-        newDocument.put("Level", level);
-        newDocument.put("Rate", rate);
-        newDocument.put("Enabled", enabled);
-        newDocument.put("LastClaim", lastclaim);
-        newDocument.put("x", location.getX());
-        newDocument.put("y", location.getY());
-        newDocument.put("z", location.getZ());
-        new DatabaseManager().getMinersDB().insertOne(newDocument);
+object MinerDataManager {
+    fun setMiner(
+        name: String?,
+        type: MinerType?,
+        level: Int,
+        rate: Double,
+        enabled: Boolean,
+        lastclaim: Long,
+        location: Location
+    ) {
+        val newDocument = Document()
+        newDocument["ID"] = DatabaseManager().minersDB.countDocuments() + 1
+        newDocument["Name"] = name
+        newDocument["Material"] = type.getName()
+        newDocument["Level"] = level
+        newDocument["Rate"] = rate
+        newDocument["Enabled"] = enabled
+        newDocument["LastClaim"] = lastclaim
+        newDocument["x"] = location.x
+        newDocument["y"] = location.y
+        newDocument["z"] = location.z
+        DatabaseManager().minersDB.insertOne(newDocument)
     }
 
-    public static void setLastClaim(String name) {
-        Document document = new DatabaseManager().getMinersDB().find(new Document("Name", name)).first();
+    fun setLastClaim(name: String?) {
+        val document = DatabaseManager().minersDB.find(Document("Name", name)).first()
         if (document != null) {
-            Bson updated = new Document("LastClaim", System.currentTimeMillis());
-            Bson update = new Document("$set", updated);
-            new DatabaseManager().getMinersDB().updateOne(document, update);
+            val updated: Bson = Document("LastClaim", System.currentTimeMillis())
+            val update: Bson = Document("\$set", updated)
+            DatabaseManager().minersDB.updateOne(document, update)
         }
     }
 
-    public static long getLastClaim(long id) {
-        Document doc = new DatabaseManager().getMinersDB().find(new Document("ID", id)).first();
+    fun getLastClaim(id: Long): Long {
+        val doc = DatabaseManager().minersDB.find(Document("ID", id)).first()
         if (doc != null) {
-            for (String key : doc.keySet()) {
-                if (key.equals("LastClaim")) return (long) doc.get(key);
+            for (key in doc.keys) {
+                if (key == "LastClaim") return doc[key] as Long
             }
         }
-        return 0;
+        return 0
     }
 
-    public static HashMap<Long, CryptoMiner> getMiners() {
-        HashMap<Long, CryptoMiner> list = new HashMap<>();
-        try (MongoCursor<Document> cursor = new DatabaseManager().getMinersDB().find().cursor()) {
-            while (cursor.hasNext()) {
-                Document doc = cursor.next();
-                list.put(doc.getLong("ID"), new CryptoMiner(doc.getString("Name"), MinerType.getByName(doc.getString("Material")), doc.getInteger("Level"), doc.getDouble("Rate"), doc.getLong("LastClaim"), new Location(Bukkit.getWorld("world"), doc.getDouble("x"), doc.getDouble("y"), doc.getDouble("z"))));
+    val miners: HashMap<Long, CryptoMiner>
+        get() {
+            val list = HashMap<Long, CryptoMiner>()
+            DatabaseManager().minersDB.find().cursor().use { cursor ->
+                while (cursor.hasNext()) {
+                    val doc = cursor.next()
+                    list[doc.getLong("ID")] = CryptoMiner(
+                        doc.getString("Name"),
+                        MinerType.Companion.getByName(doc.getString("Material")),
+                        doc.getInteger("Level"),
+                        doc.getDouble("Rate"),
+                        doc.getLong("LastClaim"),
+                        Location(Bukkit.getWorld("world"), doc.getDouble("x"), doc.getDouble("y"), doc.getDouble("z"))
+                    )
+                }
+                return list
             }
-            return list;
         }
-    }
-
 }
-

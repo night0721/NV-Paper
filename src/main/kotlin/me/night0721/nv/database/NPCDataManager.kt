@@ -1,62 +1,66 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import com.mongodb.client.MongoCursor;
-import me.night0721.nv.entities.npcs.NPCManager;
-import me.night0721.nv.util.Util;
-import org.bson.Document;
+import me.night0721.nv.entities.npcs.NPCManager
+import me.night0721.nv.util.Util.warn
+import org.bson.Document
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-
-public class NPCDataManager {
-    public static void setNPC(String name, double x, double y, double z, int pitch, int yaw, String world, String texture, String signature) {
-        Document document = new DatabaseManager().getNPCsDB().find(new Document("Name", name)).first();
+object NPCDataManager {
+    fun setNPC(
+        name: String?,
+        x: Double,
+        y: Double,
+        z: Double,
+        pitch: Int,
+        yaw: Int,
+        world: String?,
+        texture: String?,
+        signature: String?
+    ) {
+        val document = DatabaseManager().npCsDB.find(Document("Name", name)).first()
         if (document != null) {
-            Util.warn("A NPC with this name already exist");
+            warn("A NPC with this name already exist")
         } else {
-            Document newDocument = new Document();
-            newDocument.put("Name", name);
-            newDocument.put("x", x);
-            newDocument.put("y", y);
-            newDocument.put("z", z);
-            newDocument.put("pitch", pitch);
-            newDocument.put("yaw", yaw);
-            newDocument.put("world", world);
-            newDocument.put("texture", texture);
-            newDocument.put("signature", signature);
-            new DatabaseManager().getNPCsDB().insertOne(newDocument);
+            val newDocument = Document()
+            newDocument["Name"] = name
+            newDocument["x"] = x
+            newDocument["y"] = y
+            newDocument["z"] = z
+            newDocument["pitch"] = pitch
+            newDocument["yaw"] = yaw
+            newDocument["world"] = world
+            newDocument["texture"] = texture
+            newDocument["signature"] = signature
+            DatabaseManager().npCsDB.insertOne(newDocument)
         }
     }
 
-    public static void reloadNPC() {
-        List<HashMap<String, Object>> npcList = new ArrayList<>();
-        try (MongoCursor<Document> cursor = new DatabaseManager().getNPCsDB().find().cursor()) {
+    fun reloadNPC() {
+        val npcList: MutableList<HashMap<String, Any>> = ArrayList()
+        DatabaseManager().npCsDB.find().cursor().use { cursor ->
             while (cursor.hasNext()) {
-                Document document = cursor.next();
-                HashMap<String, Object> npc = new HashMap<>();
-                String name = document.getString("Name");
-                double x = document.getDouble("x");
-                double y = document.getDouble("y");
-                double z = document.getDouble("z");
-                int pitch = document.getInteger("pitch");
-                int yaw = document.getInteger("yaw");
-                String world = document.getString("world");
-                String texture = document.getString("texture");
-                String signature = document.getString("signature");
-                npc.put("name", name);
-                npc.put("x", x);
-                npc.put("y", y);
-                npc.put("z", z);
-                npc.put("pitch", pitch);
-                npc.put("yaw", yaw);
-                npc.put("world", world);
-                npc.put("texture", texture);
-                npc.put("signature", signature);
-                npcList.add(npc);
+                val document = cursor.next()
+                val npc = HashMap<String, Any>()
+                val name = document.getString("Name")
+                val x = document.getDouble("x")
+                val y = document.getDouble("y")
+                val z = document.getDouble("z")
+                val pitch = document.getInteger("pitch")
+                val yaw = document.getInteger("yaw")
+                val world = document.getString("world")
+                val texture = document.getString("texture")
+                val signature = document.getString("signature")
+                npc["name"] = name
+                npc["x"] = x
+                npc["y"] = y
+                npc["z"] = z
+                npc["pitch"] = pitch
+                npc["yaw"] = yaw
+                npc["world"] = world
+                npc["texture"] = texture
+                npc["signature"] = signature
+                npcList.add(npc)
             }
         }
-        NPCManager.reloadNPC(npcList);
+        NPCManager.reloadNPC(npcList)
     }
 }

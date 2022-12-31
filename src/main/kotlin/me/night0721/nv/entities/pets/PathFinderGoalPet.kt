@@ -1,57 +1,49 @@
-package me.night0721.nv.entities.pets;
+package me.night0721.nv.entities.pets
 
-import java.util.EnumSet;
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.Goal
+import java.util.*
 
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.goal.Goal;
+class PathFinderGoalPet(// our pet
+    private val pet: Mob, // pet's speed
+    private val speed: Double, // distance between owner & pet
+    private val distance: Float
+) : Goal() {
+    private var owner: LivingEntity? = null // owner
+    private var x = 0.0 // x
+    private var y = 0.0 // y
+    private var z = 0.0 // z
 
-public class PathFinderGoalPet extends Goal {
-    private final Mob pet; // our pet
-    private LivingEntity owner; // owner
-    private final double speed; // pet's speed
-    private final float distance; // distance between owner & pet
-    private double x; // x
-    private double y; // y
-    private double z; // z
-
-
-    public PathFinderGoalPet(Mob mob, double speed, float distance) {
-        this.pet = mob;
-        this.speed = speed;
-        this.distance = distance;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET, Flag.JUMP));
+    init {
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET, Flag.JUMP))
     }
 
-    @Override
-    public boolean canUse() {
-        this.owner = this.pet.getTarget();
-        if (this.owner == null) return false;
-        else if (this.pet.getDisplayName() == null) return false;
-        else if (!this.pet.getDisplayName().getString().contains(this.owner.getName().getString())) return false;
-        else if (this.owner.distanceToSqr(this.pet) > (double) (this.distance * this.distance)) {
-            pet.getBukkitEntity().teleport(this.owner.getBukkitEntity().getLocation());
-            return false;
+    override fun canUse(): Boolean {
+        owner = pet.target
+        return if (owner == null) false else if (pet.displayName == null) false else if (!pet.displayName.string.contains(
+                owner!!.name.string
+            )
+        ) false else if (owner!!.distanceToSqr(pet) > (distance * distance).toDouble()) {
+            pet.bukkitEntity.teleport(owner!!.bukkitEntity.location)
+            false
         } else {
-            this.x = this.owner.getX();
-            this.y = this.owner.getY();
-            this.z = this.owner.getZ();
-            return true;
+            x = owner!!.x
+            y = owner!!.y
+            z = owner!!.z
+            true
         }
     }
 
-    @Override
-    public void start() {
-        this.pet.getNavigation().moveTo(this.x, this.y, this.z, this.speed);
+    override fun start() {
+        pet.navigation.moveTo(x, y, z, speed)
     }
 
-    @Override
-    public boolean canContinueToUse() {
-        return !this.pet.getNavigation().isDone() && this.owner.distanceToSqr(this.pet) < (double) (this.distance * this.distance);
+    override fun canContinueToUse(): Boolean {
+        return !pet.navigation.isDone && owner!!.distanceToSqr(pet) < (distance * distance).toDouble()
     }
 
-    @Override
-    public void stop() {
-        this.owner = null;
+    override fun stop() {
+        owner = null
     }
-
 }

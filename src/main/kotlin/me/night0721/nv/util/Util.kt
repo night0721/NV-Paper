@@ -25,7 +25,7 @@ object Util {
     @JvmStatic
     fun capitalize(str: String?): String? {
         return if (str.isNullOrEmpty()) str else str.substring(0, 1)
-            .toUpperCase(Locale.getDefault()) + str.substring(1)
+            .uppercase(Locale.getDefault()) + str.substring(1)
     }
 
     @JvmStatic

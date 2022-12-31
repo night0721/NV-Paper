@@ -1,46 +1,41 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandMap
+import org.bukkit.command.CommandSender
+import org.bukkit.command.defaults.BukkitCommand
+import java.util.*
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-
-public abstract class Command extends BukkitCommand {
-
-    public Command(String command, String[] aliases, String description, String permission) {
-        super(command);
-        this.setAliases(Arrays.asList(aliases));
-        this.setDescription(description);
-        this.setPermission(permission);
-
+abstract class Command(command: String?, aliases: Array<String?>, description: String?, permission: String?) :
+    BukkitCommand(
+        command!!
+    ) {
+    init {
+        this.aliases = Arrays.asList(*aliases)
+        setDescription(description!!)
+        this.permission = permission
         try {
-            Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            field.setAccessible(true);
-            CommandMap map = (CommandMap) field.get(Bukkit.getServer());
-            map.register(command, this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            val field = Bukkit.getServer().javaClass.getDeclaredField("commandMap")
+            field.isAccessible = true
+            val map = field[Bukkit.getServer()] as CommandMap
+            map.register(command!!, this)
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
         }
-
     }
 
-    @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
-        onCommand(sender, args);
-        return false;
+    override fun execute(sender: CommandSender, commandLabel: String, args: Array<String>): Boolean {
+        onCommand(sender, args)
+        return false
     }
 
-    @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args) throws IllegalArgumentException {
-        return onTabComplete(sender, args);
+    @Throws(IllegalArgumentException::class)
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
+        return onTabComplete(sender, args)
     }
 
-    public abstract void onCommand(CommandSender sender, String[] args);
-
-    public abstract List<String> onTabComplete(CommandSender sender, String[] args);
+    abstract fun onCommand(sender: CommandSender, args: Array<String>)
+    abstract fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String>
 }

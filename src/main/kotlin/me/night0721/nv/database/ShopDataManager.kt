@@ -1,19 +1,15 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import com.mongodb.client.MongoCursor;
-import org.bson.Document;
-
-import java.util.HashMap;
-
-public class ShopDataManager {
-    public static HashMap<String, Integer> getItems() {
-        HashMap<String, Integer> list = new HashMap<>();
-        try (MongoCursor<Document> cursor = new DatabaseManager().getShopsDB().find().cursor()) {
-            while (cursor.hasNext()) {
-                Document doc = cursor.next();
-                list.put(doc.getString("Name"), doc.getInteger("Price"));
+object ShopDataManager {
+    val items: HashMap<String, Int>
+        get() {
+            val list = HashMap<String, Int>()
+            DatabaseManager().shopsDB.find().cursor().use { cursor ->
+                while (cursor.hasNext()) {
+                    val doc = cursor.next()
+                    list[doc.getString("Name")] = doc.getInteger("Price")
+                }
+                return list
             }
-            return list;
         }
-    }
 }

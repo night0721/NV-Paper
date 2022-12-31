@@ -1,13 +1,11 @@
-package me.night0721.nv.game.tasks;
+package me.night0721.nv.game.tasks
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitRunnable
 
-public class AlwaysDayTask extends BukkitRunnable {
-    @Override
-    public void run() {
-        World world = Bukkit.getServer().getWorld("world");
-        if (world != null) world.setTime(0L);
+class AlwaysDayTask : BukkitRunnable() {
+    override fun run() {
+        val world = Bukkit.getServer().getWorld("world")
+        if (world != null) world.time = 0L
     }
 }

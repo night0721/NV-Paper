@@ -2,6 +2,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     `java-library`
+    kotlin("jvm") version "1.8.0"
     id("io.papermc.paperweight.userdev") version "1.4.0"
     id("xyz.jpenilla.run-paper") version "2.0.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
@@ -36,6 +37,9 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
+    }
+    compileKotlin {
+        kotlinOptions.jvmTarget = "17"
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()

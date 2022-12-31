@@ -1,35 +1,47 @@
-package me.night0721.nv.entities.miners;
+package me.night0721.nv.entities.miners
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor
 
-public enum Rarity {
-    COMMON(ChatColor.WHITE.toString() + ChatColor.BOLD + "COMMON", ChatColor.WHITE.toString()), UNCOMMON(net.md_5.bungee.api.ChatColor.of("#31ff09").toString() + ChatColor.BOLD + "UNCOMMON", net.md_5.bungee.api.ChatColor.of("#31ff09").toString()), RARE(net.md_5.bungee.api.ChatColor.of("#2f57ae").toString() + ChatColor.BOLD + "RARE", net.md_5.bungee.api.ChatColor.of("#2f57ae").toString()), EPIC(net.md_5.bungee.api.ChatColor.of("#b201b2").toString() + ChatColor.BOLD + "EPIC", net.md_5.bungee.api.ChatColor.of("#b201b2").toString()), LEGENDARY(net.md_5.bungee.api.ChatColor.of("#ffa21b").toString() + ChatColor.BOLD + "LEGENDARY", net.md_5.bungee.api.ChatColor.of("#ffa21b").toString()), MYTHIC(net.md_5.bungee.api.ChatColor.of("#ff23ff").toString() + ChatColor.BOLD + "MYTHIC", net.md_5.bungee.api.ChatColor.of("#ff23ff").toString()), ULTRA(ChatColor.RED.toString() + ChatColor.BOLD + "ULTRA", ChatColor.RED.toString()), GRAND(net.md_5.bungee.api.ChatColor.of("#00fdff").toString() + ChatColor.BOLD + "GRAND", net.md_5.bungee.api.ChatColor.of("#00fdff").toString());
-    private final String display;
-    private final String color;
+enum class Rarity(val display: String, val color: String) {
+    COMMON(
+        org.bukkit.ChatColor.WHITE.toString() + org.bukkit.ChatColor.BOLD + "COMMON",
+        org.bukkit.ChatColor.WHITE.toString()
+    ),
+    UNCOMMON(
+        ChatColor.of("#31ff09").toString() + org.bukkit.ChatColor.BOLD + "UNCOMMON", ChatColor.of("#31ff09").toString()
+    ),
+    RARE(
+        ChatColor.of("#2f57ae").toString() + org.bukkit.ChatColor.BOLD + "RARE", ChatColor.of("#2f57ae").toString()
+    ),
+    EPIC(
+        ChatColor.of("#b201b2").toString() + org.bukkit.ChatColor.BOLD + "EPIC", ChatColor.of("#b201b2").toString()
+    ),
+    LEGENDARY(
+        ChatColor.of("#ffa21b").toString() + org.bukkit.ChatColor.BOLD + "LEGENDARY", ChatColor.of("#ffa21b").toString()
+    ),
+    MYTHIC(
+        ChatColor.of("#ff23ff").toString() + org.bukkit.ChatColor.BOLD + "MYTHIC", ChatColor.of("#ff23ff").toString()
+    ),
+    ULTRA(
+        org.bukkit.ChatColor.RED.toString() + org.bukkit.ChatColor.BOLD + "ULTRA",
+        org.bukkit.ChatColor.RED.toString()
+    ),
+    GRAND(
+        ChatColor.of("#00fdff").toString() + org.bukkit.ChatColor.BOLD + "GRAND", ChatColor.of("#00fdff").toString()
+    );
 
-    Rarity(String display, String color) {
-        this.display = display;
-        this.color = color;
-    }
-
-    public String getDisplay() {
-        return display;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public static Rarity getRarity(String str) {
-        return switch (str) {
-            case "UNCOMMON" -> UNCOMMON;
-            case "RARE" -> RARE;
-            case "EPIC" -> EPIC;
-            case "LEGENDARY" -> LEGENDARY;
-            case "MYTHIC" -> MYTHIC;
-            case "ULTRA" -> ULTRA;
-            case "GRAND" -> GRAND;
-            default -> COMMON;
-        };
+    companion object {
+        fun getRarity(str: String?): Rarity {
+            return when (str) {
+                "UNCOMMON" -> UNCOMMON
+                "RARE" -> RARE
+                "EPIC" -> EPIC
+                "LEGENDARY" -> LEGENDARY
+                "MYTHIC" -> MYTHIC
+                "ULTRA" -> ULTRA
+                "GRAND" -> GRAND
+                else -> COMMON
+            }
+        }
     }
 }

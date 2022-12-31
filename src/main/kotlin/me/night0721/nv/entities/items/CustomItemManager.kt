@@ -1,115 +1,129 @@
-package me.night0721.nv.entities.items;
+package me.night0721.nv.entities.items
 
-import me.night0721.nv.NullValkyrie;
-import me.night0721.nv.database.CustomWeaponsDataManager;
-import me.night0721.nv.entities.miners.Rarity;
-import me.night0721.nv.util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import me.night0721.nv.NullValkyrie
+import me.night0721.nv.database.CustomWeaponsDataManager
+import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Util.capitalize
+import org.bukkit.*
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.*
+import org.bukkit.persistence.PersistentDataType
+import java.util.*
 
-import java.util.*;
-
-public class CustomItemManager {
-    public static final HashMap<String, NamespacedKey> keys = new HashMap<>();
-
-    @SuppressWarnings("unchecked")
-    public static ItemStack produceItem(String itemName) {
-        HashMap<String, Object> weapon = new CustomWeaponsDataManager().getWeapon(itemName);
-        ItemStack item = new ItemStack((Material) weapon.get("Material"));
-        List<String> propertiesList = new ArrayList<>();
-        List<String> itemAbility = new ArrayList<>();
-        HashMap<String, Object> enchants = (HashMap<String, Object>) weapon.get("Enchants");
-        HashMap<String, Object> attributes = (HashMap<String, Object>) weapon.get("Attributes");
-        for (String enchant : enchants.keySet())
-            item.addUnsafeEnchantment(Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.minecraft(enchant))), (Integer) enchants.get(enchant));
-        HashMap<String, Object> lore = (HashMap<String, Object>) weapon.get("Lore");
-        HashMap<String, Object> ability = (HashMap<String, Object>) lore.get("Ability");
-        HashMap<String, Object> properties = (HashMap<String, Object>) lore.get("Properties");
-        for (String p : properties.keySet())
-            if ((int) properties.get(p) > 0)
-                propertiesList.add(ChatColor.GRAY + Util.capitalize(p) + ": " + ChatColor.RED + "+" + properties.get(p));
-        if (ability.get("Name") != null) {
-            itemAbility.add(ChatColor.GOLD + "Item Ability: " + ability.get("Name"));
-            for (String line : (List<String>) ability.get("Details"))
-                itemAbility.add(ChatColor.GRAY + line);
+object CustomItemManager {
+    val keys = HashMap<String?, NamespacedKey?>()
+    fun produceItem(itemName: String?): ItemStack {
+        val weapon = CustomWeaponsDataManager().getWeapon(itemName)
+        val item = ItemStack((weapon!!["Material"] as Material?)!!)
+        val propertiesList: MutableList<String> = ArrayList()
+        val itemAbility: MutableList<String> = ArrayList()
+        val enchants = weapon["Enchants"] as HashMap<String, Any>?
+        val attributes = weapon["Attributes"] as HashMap<String, Any>?
+        for (enchant in enchants!!.keys) item.addUnsafeEnchantment(
+            Objects.requireNonNull(
+                Enchantment.getByKey(
+                    NamespacedKey.minecraft(enchant)
+                )
+            ), (enchants[enchant] as Int?)!!
+        )
+        val lore = weapon["Lore"] as HashMap<String, Any>?
+        val ability = lore!!["Ability"] as HashMap<String, Any?>?
+        val properties = lore["Properties"] as HashMap<String, Any>?
+        for (p in properties!!.keys) if (properties[p] as Int > 0) propertiesList.add(
+            ChatColor.GRAY.toString() + capitalize(
+                p
+            ) + ": " + ChatColor.RED + "+" + properties[p]
+        )
+        if (ability!!["Name"] != null) {
+            itemAbility.add(ChatColor.GOLD.toString() + "Item Ability: " + ability["Name"])
+            for (line in (ability["Details"] as List<String>?)!!) itemAbility.add(ChatColor.GRAY.toString() + line)
         }
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
-        itemMeta.setDisplayName(Rarity.getRarity((String) weapon.get("Rarity")).getColor() + weapon.get("Name"));
-        itemMeta.setUnbreakable(true);
-
-        ArrayList<String> loreList = new ArrayList<>(propertiesList);
-        loreList.add("");
-        ArrayList<String> enchantmentList = new ArrayList<>();
-        for (Enchantment enchantment : item.getEnchantments().keySet()) {
-            List<String> split = Arrays.asList(Arrays.asList(enchantment.getKey().toString().split(":")).get(1).split("_"));
-            StringBuilder builder = new StringBuilder();
-            for (String strings : split) {
-                String formatted = Util.capitalize(strings);
-                if (split.size() > 1) {
-                    if (strings.equals(split.get(split.size() - 1))) builder.append(formatted);
-                    else {
-                        builder.append(formatted);
-                        builder.append(" ");
+        val itemMeta = item.itemMeta ?: return item
+        itemMeta.setDisplayName(Rarity.Companion.getRarity(weapon["Rarity"] as String?).getColor() + weapon["Name"])
+        itemMeta.isUnbreakable = true
+        val loreList = ArrayList(propertiesList)
+        loreList.add("")
+        val enchantmentList = ArrayList<String>()
+        for (enchantment in item.enchantments.keys) {
+            val split = Arrays.asList(
+                *Arrays.asList(
+                    *enchantment.key.toString().split(":".toRegex()).dropLastWhile { it.isEmpty() }
+                        .toTypedArray())[1].split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            )
+            val builder = StringBuilder()
+            for (strings in split) {
+                val formatted = capitalize(strings)
+                if (split.size > 1) {
+                    if (strings == split[split.size - 1]) builder.append(formatted) else {
+                        builder.append(formatted)
+                        builder.append(" ")
                     }
-                } else builder.append(formatted);
+                } else builder.append(formatted)
             }
-            enchantmentList.add(builder + " " + item.getEnchantmentLevel(enchantment));
+            enchantmentList.add(builder.toString() + " " + item.getEnchantmentLevel(enchantment))
         }
-        loreList.add(ChatColor.BLUE + String.join(", ", enchantmentList));
-        loreList.add("");
-        loreList.addAll(itemAbility);
-        loreList.add("");
-        loreList.add(Rarity.getRarity((String) weapon.get("Rarity")).getDisplay());
-        itemMeta.setLore(loreList);
-        for (String attribute : attributes.keySet()) {
-            if (attribute.equals("damage")) {
-                AttributeModifier p = new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", (Double) attributes.get(attribute), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, p);
-            } else if (attribute.equals("moveSpeed")) {
-                AttributeModifier s = new AttributeModifier(UUID.randomUUID(), "generic.movementSpeed", (Double) attributes.get(attribute), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                itemMeta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, s);
+        loreList.add(ChatColor.BLUE.toString() + java.lang.String.join(", ", enchantmentList))
+        loreList.add("")
+        loreList.addAll(itemAbility)
+        loreList.add("")
+        loreList.add(Rarity.Companion.getRarity(weapon["Rarity"] as String?).getDisplay())
+        itemMeta.lore = loreList
+        for (attribute in attributes!!.keys) {
+            if (attribute == "damage") {
+                val p = AttributeModifier(
+                    UUID.randomUUID(),
+                    "generic.attackDamage",
+                    (attributes[attribute] as Double?)!!,
+                    AttributeModifier.Operation.ADD_NUMBER,
+                    EquipmentSlot.HAND
+                )
+                itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, p)
+            } else if (attribute == "moveSpeed") {
+                val s = AttributeModifier(
+                    UUID.randomUUID(),
+                    "generic.movementSpeed",
+                    (attributes[attribute] as Double?)!!,
+                    AttributeModifier.Operation.ADD_NUMBER,
+                    EquipmentSlot.HAND
+                )
+                itemMeta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, s)
             }
         }
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
-        HashMap<String, Object> pdcdata = (HashMap<String, Object>) weapon.get("PDC");
-        for (String key : pdcdata.keySet()) {
-            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-            NamespacedKey key1 = new NamespacedKey(NullValkyrie.getPlugin(NullValkyrie.class), key);
-            keys.put(Rarity.getRarity((String) weapon.get("Rarity")).getColor() + weapon.get("Name") + "." + key, key1);
-            container.set(key1, PersistentDataType.INTEGER, (int) pdcdata.get(key));
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS)
+        val pdcdata = weapon["PDC"] as HashMap<String, Any>?
+        for (key in pdcdata!!.keys) {
+            val container = itemMeta.persistentDataContainer
+            val key1 = NamespacedKey(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, key)
+            keys[Rarity.Companion.getRarity(weapon["Rarity"] as String?).getColor() + weapon["Name"] + "." + key] = key1
+            container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
-        item.setItemMeta(itemMeta);
-        HashMap<String, Object> recipes = (HashMap<String, Object>) weapon.get("Recipes");
-        if (recipes.get("Shape") != null) {
-            List<String> shapes = (List<String>) recipes.get("Shape");
-            HashMap<String, String> ind = (HashMap<String, String>) recipes.get("Ingredients");
-            HashMap<Character, Material> indgredients = new HashMap<>();
-            for (String i : ind.keySet())
-                indgredients.put(i.charAt(0), Material.matchMaterial(ind.get(i)));
-            setItemRecipe((String) weapon.get("Name"), item, shapes, indgredients, (int) recipes.get("Amount"));
-
+        item.setItemMeta(itemMeta)
+        val recipes = weapon["Recipes"] as HashMap<String, Any?>?
+        if (recipes!!["Shape"] != null) {
+            val shapes = recipes["Shape"] as List<String>?
+            val ind = recipes["Ingredients"] as HashMap<String, String>?
+            val indgredients = HashMap<Char, Material?>()
+            for (i in ind!!.keys) indgredients[i[0]] = Material.matchMaterial(ind[i]!!)
+            setItemRecipe(weapon["Name"] as String?, item, shapes, indgredients, recipes["Amount"] as Int)
         }
-        return item;
+        return item
     }
 
-    public static void setItemRecipe(String key, ItemStack i, List<String> shapes, HashMap<Character, Material> ingredients, int amount) {
-        NamespacedKey nsk = new NamespacedKey(NullValkyrie.getPlugin(NullValkyrie.class), key.replaceAll("\\s", ""));
-        ShapedRecipe recipe = new ShapedRecipe(nsk, i);
-        recipe.shape(shapes.get(0), shapes.get(1), shapes.get(2));
-        List<Character> abcs = List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I');
-        for (int ei = 0; ei < amount; ei++)
-            recipe.setIngredient(abcs.get(ei), ingredients.get(abcs.get(ei)));
-        if (Bukkit.getRecipe(nsk) != null) Bukkit.removeRecipe(nsk);
-        Bukkit.addRecipe(recipe);
+    fun setItemRecipe(
+        key: String?,
+        i: ItemStack?,
+        shapes: List<String>?,
+        ingredients: HashMap<Char, Material?>,
+        amount: Int
+    ) {
+        val nsk = NamespacedKey(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, key!!.replace("\\s".toRegex(), ""))
+        val recipe = ShapedRecipe(nsk, i!!)
+        recipe.shape(shapes!![0], shapes[1], shapes[2])
+        val abcs = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
+        for (ei in 0 until amount) recipe.setIngredient(abcs[ei], ingredients[abcs[ei]]!!)
+        if (Bukkit.getRecipe(nsk) != null) Bukkit.removeRecipe(nsk)
+        Bukkit.addRecipe(recipe)
     }
 }

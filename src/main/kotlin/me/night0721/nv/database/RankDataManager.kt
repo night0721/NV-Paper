@@ -1,48 +1,45 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import com.mongodb.client.MongoCursor;
-import me.night0721.nv.util.Rank;
-import me.night0721.nv.ui.player.ScoreboardListener;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import me.night0721.nv.ui.player.ScoreboardListener
+import me.night0721.nv.util.Rank
+import org.bson.Document
+import org.bson.conversions.Bson
+import org.bukkit.Bukkit
+import java.util.*
 
-import java.util.UUID;
-
-public class RankDataManager {
-    public static void setRank(UUID uuid, Rank rank, ScoreboardListener... listener) {
+object RankDataManager {
+    fun setRank(uuid: UUID, rank: Rank, vararg listener: ScoreboardListener) {
         // TODO: fix not working in rank command
-        Document document = new DatabaseManager().getRanksDB().find(new Document("UUID", uuid.toString())).first();
+        val document = DatabaseManager().ranksDB.find(Document("UUID", uuid.toString())).first()
         if (document != null) {
-            Bson updated = new Document("Rank", rank.name());
-            Bson update = new Document("$set", updated);
-            new DatabaseManager().getRanksDB().updateOne(document, update);
+            val updated: Bson = Document("Rank", rank.name)
+            val update: Bson = Document("\$set", updated)
+            DatabaseManager().ranksDB.updateOne(document, update)
         } else {
-            Document newDocument = new Document();
-            newDocument.put("UUID", uuid.toString());
-            newDocument.put("Rank", rank.name());
-            new DatabaseManager().getRanksDB().insertOne(newDocument);
+            val newDocument = Document()
+            newDocument["UUID"] = uuid.toString()
+            newDocument["Rank"] = rank.name
+            DatabaseManager().ranksDB.insertOne(newDocument)
         }
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (player in Bukkit.getOnlinePlayers()) {
             if (player.hasPlayedBefore()) {
-                listener[0].nameTagManager.removeTag(player);
-                listener[0].nameTagManager.newTag(player);
+                listener[0].nameTagManager.removeTag(player)
+                listener[0].nameTagManager.newTag(player)
             }
         }
     }
 
-    public static Rank getRank(UUID uuid) {
-        try (MongoCursor<Document> cursor = new DatabaseManager().getRanksDB().find(new Document("UUID", uuid.toString())).cursor()) {
+    fun getRank(uuid: UUID): Rank? {
+        DatabaseManager().ranksDB.find(Document("UUID", uuid.toString())).cursor().use { cursor ->
             while (cursor.hasNext()) {
-                Document doc = cursor.next();
-                for (String key : doc.keySet()) {
-                    if (key.equals("Rank")) {
-                        return Rank.valueOf((String) doc.get(key));
+                val doc = cursor.next()
+                for (key in doc.keys) {
+                    if (key == "Rank") {
+                        return Rank.valueOf((doc[key] as String?)!!)
                     }
                 }
             }
         }
-        return null;
+        return null
     }
 }

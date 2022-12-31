@@ -1,25 +1,17 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import me.night0721.nv.ui.inventory.Menu;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import me.night0721.nv.ui.inventory.Menu
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-
-public class MenuCommand extends Command {
-    public MenuCommand() {
-        super("menu", new String[]{"m"}, "Open the menu", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            new Menu().UI((Player) sender);
+class MenuCommand : Command("menu", arrayOf<String?>("m"), "Open the menu", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        if (sender is Player) {
+            Menu().UI(sender)
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
+        return null
     }
 }

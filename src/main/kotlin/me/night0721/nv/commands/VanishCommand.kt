@@ -1,43 +1,33 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import me.night0721.nv.NullValkyrie;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import me.night0721.nv.NullValkyrie
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-public class VanishCommand extends Command {
-    private final List<UUID> vanished = new ArrayList<>();
-
-    public VanishCommand() {
-        super("vanish", new String[]{}, "Turn yourself into invisible", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            if (vanished.contains(player.getUniqueId())) {
-                vanished.remove(player.getUniqueId());
-                for (Player target : Bukkit.getOnlinePlayers()) {
-                    target.showPlayer(NullValkyrie.getPlugin(NullValkyrie.class), player);
+class VanishCommand : Command("vanish", arrayOf(), "Turn yourself into invisible", "") {
+    private val vanished: MutableList<UUID> = ArrayList()
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        if (sender is Player) {
+            if (vanished.contains(sender.uniqueId)) {
+                vanished.remove(sender.uniqueId)
+                for (target in Bukkit.getOnlinePlayers()) {
+                    target.showPlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, sender)
                 }
-                player.sendMessage(ChatColor.GREEN + "You are now seen by people");
+                sender.sendMessage(ChatColor.GREEN.toString() + "You are now seen by people")
             } else {
-                vanished.add(player.getUniqueId());
-                for (Player target : Bukkit.getOnlinePlayers()) {
-                    target.hidePlayer(NullValkyrie.getPlugin(NullValkyrie.class), player);
+                vanished.add(sender.uniqueId)
+                for (target in Bukkit.getOnlinePlayers()) {
+                    target.hidePlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, sender)
                 }
-                player.sendMessage(ChatColor.GREEN + "You are now vanished");
+                sender.sendMessage(ChatColor.GREEN.toString() + "You are now vanished")
             }
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
+        return null
     }
 }

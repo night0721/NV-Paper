@@ -1,30 +1,29 @@
-package me.night0721.nv.packets.handle;
+package me.night0721.nv.packets.handle
 
-import io.netty.channel.Channel;
-import org.bukkit.entity.Player;
+import me.night0721.nv.packets.protocol.Channel
+import org.bukkit.entity.Player
 
-public class PacketInjector {
-    public void addPlayer(Player p) {
+class PacketInjector {
+    fun addPlayer(p: Player) {
         try {
-            Channel ch = me.night0721.nv.packets.protocol.Channel.getChannel(p);
-            if (ch.pipeline().get("PacketInjector") == null) {
-                PacketHandler h = new PacketHandler(p);
-                ch.pipeline().addBefore("packet_handler", "PacketInjector", h);
+            val ch = Channel.getChannel(p)
+            if (ch!!.pipeline()["PacketInjector"] == null) {
+                val h = PacketHandler(p)
+                ch.pipeline().addBefore("packet_handler", "PacketInjector", h)
             }
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (t: Throwable) {
+            t.printStackTrace()
         }
     }
 
-    public void removePlayer(Player p) {
+    fun removePlayer(p: Player) {
         try {
-            Channel ch = me.night0721.nv.packets.protocol.Channel.getChannel(p);
-            if (ch.pipeline().get("PacketInjector") != null) {
-                ch.pipeline().remove("PacketInjector");
+            val ch = Channel.getChannel(p)
+            if (ch!!.pipeline()["PacketInjector"] != null) {
+                ch.pipeline().remove("PacketInjector")
             }
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (t: Throwable) {
+            t.printStackTrace()
         }
     }
-
 }

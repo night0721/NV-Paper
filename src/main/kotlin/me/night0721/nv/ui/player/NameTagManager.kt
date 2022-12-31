@@ -1,41 +1,41 @@
-package me.night0721.nv.ui.player;
+package me.night0721.nv.ui.player
 
-import me.night0721.nv.database.RankDataManager;
-import me.night0721.nv.util.Rank;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import me.night0721.nv.database.RankDataManager
+import me.night0721.nv.util.Rank
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Criteria
+import org.bukkit.scoreboard.DisplaySlot
+import java.util.*
 
-import java.util.Objects;
-
-public class NameTagManager {
-    public void setNametags(Player player) {
-        Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective obj = newScoreboard.registerNewObjective("TabList", Criteria.DUMMY, "Test");
-        obj.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-        player.setScoreboard(newScoreboard);
-        for (Rank rank : Rank.values()) {
-            Team team = player.getScoreboard().registerNewTeam(rank.name());
-            team.setPrefix(rank.getDisplay() + " ");
+class NameTagManager {
+    fun setNametags(player: Player) {
+        val newScoreboard = Bukkit.getScoreboardManager().newScoreboard
+        val obj = newScoreboard.registerNewObjective("TabList", Criteria.DUMMY, "Test")
+        obj.displaySlot = DisplaySlot.PLAYER_LIST
+        player.scoreboard = newScoreboard
+        for (rank in Rank.values()) {
+            val team = player.scoreboard.registerNewTeam(rank.name)
+            team.prefix = rank.display + " "
         }
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            if (player.getUniqueId() != target.getUniqueId()) {
-                Rank rank = RankDataManager.getRank(target.getUniqueId());
-                if (rank != null) player.getScoreboard().getTeam(rank.name()).addEntry(target.getName());
+        for (target in Bukkit.getOnlinePlayers()) {
+            if (player.uniqueId !== target.uniqueId) {
+                val rank = RankDataManager.getRank(target.uniqueId)
+                if (rank != null) player.scoreboard.getTeam(rank.name)!!.addEntry(target.name)
             }
         }
     }
 
-    public void newTag(Player player) {
-        Rank rank = RankDataManager.getRank(player.getUniqueId());
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            target.getScoreboard().getTeam(Objects.requireNonNullElse(rank, Rank.ROOKIE).name()).addEntry(player.getName());
+    fun newTag(player: Player) {
+        val rank = RankDataManager.getRank(player.uniqueId)
+        for (target in Bukkit.getOnlinePlayers()) {
+            target.scoreboard.getTeam(Objects.requireNonNullElse(rank, Rank.ROOKIE).name)!!.addEntry(player.name)
         }
     }
 
-    public void removeTag(Player player) {
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            target.getScoreboard().getEntryTeam(player.getName()).removeEntry(player.getName());
+    fun removeTag(player: Player) {
+        for (target in Bukkit.getOnlinePlayers()) {
+            target.scoreboard.getEntryTeam(player.name)!!.removeEntry(player.name)
         }
     }
 }

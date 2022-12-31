@@ -1,14 +1,15 @@
-package me.night0721.nv.ui.player;
+package me.night0721.nv.ui.player
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.ChatColor
+import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Criteria
+import org.bukkit.scoreboard.DisplaySlot
 
-public class BelowNameManager {
-    public void setBelowName(Player player) {
-        Scoreboard board = player.getScoreboard();
-        Objective obj = board.registerNewObjective("HealthBar", Criteria.HEALTH, ChatColor.RED + "❤");
-        obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        player.setScoreboard(board);
+class BelowNameManager {
+    fun setBelowName(player: Player) {
+        val board = player.scoreboard
+        val obj = board.registerNewObjective("HealthBar", Criteria.HEALTH, ChatColor.RED.toString() + "❤")
+        obj.displaySlot = DisplaySlot.BELOW_NAME
+        player.scoreboard = board
     }
 }

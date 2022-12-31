@@ -1,13 +1,13 @@
-package me.night0721.nv.packets.protocol;
+package me.night0721.nv.packets.protocol
 
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.world.entity.Entity;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.world.entity.Entity
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
+import org.bukkit.entity.Player
 
-public class PacketPlayOutSpawnEntity implements Packet {
-    public PacketPlayOutSpawnEntity(Player player, Entity entity) {
-        ClientboundAddEntityPacket packet = new ClientboundAddEntityPacket(entity);
-        ((CraftPlayer) player).getHandle().connection.send(packet);
+class PacketPlayOutSpawnEntity(player: Player?, entity: Entity?) : Packet {
+    init {
+        val packet = ClientboundAddEntityPacket(entity)
+        (player as CraftPlayer?)!!.handle.connection.send(packet)
     }
 }

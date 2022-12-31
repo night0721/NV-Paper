@@ -1,56 +1,46 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import me.night0721.nv.database.CustomWeaponsDataManager;
-import me.night0721.nv.entities.items.CustomItemManager;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
+import me.night0721.nv.database.CustomWeaponsDataManager
+import me.night0721.nv.entities.items.CustomItemManager
+import org.bukkit.*
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.util.StringUtil
+import java.util.*
 
-import java.util.*;
-
-public class UtilCommand extends Command {
-
-    public UtilCommand() {
-        super("util", new String[]{}, "Give you a tool", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
-        StringBuilder s = new StringBuilder();
-        List<String> b = Arrays.asList(args);
-        for (String a : args) {
-            if (a.equals(b.get(b.size() - 1))) {
-                s.append(a);
+class UtilCommand : Command("util", arrayOf(), "Give you a tool", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        val player = sender as Player
+        val s = StringBuilder()
+        val b = Arrays.asList(*args)
+        for (a in args) {
+            if (a == b[b.size - 1]) {
+                s.append(a)
             } else {
-                s.append(a);
-                s.append(" ");
+                s.append(a)
+                s.append(" ")
             }
-
         }
-        ItemStack item = CustomItemManager.produceItem(s.toString());
-        if (item.hasItemMeta()) {
-            player.getInventory().addItem(item);
+        val item = CustomItemManager.produceItem(s.toString())
+        if (item!!.hasItemMeta()) {
+            player.inventory.addItem(item)
         } else {
-            player.sendMessage(ChatColor.RED + "This item doesn't exist");
+            player.sendMessage(ChatColor.RED.toString() + "This item doesn't exist")
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            HashMap<String, Object> hh = CustomWeaponsDataManager.getWeapons();
-            ArrayList<String> cc = new ArrayList<>();
-            for (String s : hh.keySet()) {
-                @SuppressWarnings("unchecked") HashMap<String, Object> item = (HashMap<String, Object>) hh.get(s);
-                if (Objects.equals(item.get("Type"), "Util")) {
-                    cc.add((String) item.get("Name"));
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+        if (args.size == 1) {
+            val hh: HashMap<String, Any> = CustomWeaponsDataManager.Companion.getWeapons()
+            val cc = ArrayList<String?>()
+            for (s in hh.keys) {
+                val item = hh[s] as HashMap<String, Any>?
+                if (item!!["Type"] == "Util") {
+                    cc.add(item["Name"] as String?)
                 }
             }
-            return StringUtil.copyPartialMatches(args[0], cc, new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[0], cc, ArrayList())
         }
-        return new ArrayList<>();
+        return ArrayList()
     }
 }

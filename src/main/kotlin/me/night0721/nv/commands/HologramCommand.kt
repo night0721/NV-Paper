@@ -1,27 +1,24 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import me.night0721.nv.entities.holograms.PerPlayerHologram;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import me.night0721.nv.entities.holograms.PerPlayerHologram
+import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-
-public class HologramCommand extends Command {
-    public HologramCommand() {
-        super("hologram", new String[]{}, "Spawn a hologram", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            String[] ar = new String[]{ChatColor.AQUA + "Hi", ChatColor.DARK_PURPLE + "What", ChatColor.GOLD + "Hello World", ChatColor.GOLD + ChatColor.BOLD.toString() + "CLICK"};
-            new PerPlayerHologram(player, ar);
+class HologramCommand : Command("hologram", arrayOf(), "Spawn a hologram", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        if (sender is Player) {
+            val ar = arrayOf(
+                ChatColor.AQUA.toString() + "Hi",
+                ChatColor.DARK_PURPLE.toString() + "What",
+                ChatColor.GOLD.toString() + "Hello World",
+                ChatColor.GOLD.toString() + ChatColor.BOLD.toString() + "CLICK"
+            )
+            PerPlayerHologram(sender, ar)
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
+        return null
     }
 }

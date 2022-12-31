@@ -1,24 +1,15 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-
-public class EnchantingCommand extends Command {
-    public EnchantingCommand() {
-        super("enchant", new String[]{"et", "enchanting", "enchantingtable"}, "Open enchanting table", "");
+class EnchantingCommand :
+    Command("enchant", arrayOf<String?>("et", "enchanting", "enchantingtable"), "Open enchanting table", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        (sender as? Player)?.openEnchanting(sender.location, true)
     }
 
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            player.openEnchanting(player.getLocation(), true);
-        }
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
+        return null
     }
 }

@@ -1,27 +1,24 @@
-package me.night0721.nv.entities.players;
+package me.night0721.nv.entities.players
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import org.bukkit.Location;
+import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
+import org.bukkit.Location
 
-public class Techno extends Player {
-    public Techno(Location location, ServerPlayer player) {
-        super(player.getLevel(), BlockPos.ZERO, 0.2F, player.getGameProfile(), null);
-        this.setCustomName(Component.nullToEmpty("Technoblade"));
-        this.setCustomNameVisible(true);
-        this.setPos(location.getX(), location.getY(), location.getZ());
-
+class Techno(location: Location, player: ServerPlayer) :
+    Player(player.getLevel(), BlockPos.ZERO, 0.2f, player.getGameProfile(), null) {
+    init {
+        this.customName = Component.nullToEmpty("Technoblade")
+        this.isCustomNameVisible = true
+        this.setPos(location.x, location.y, location.z)
     }
 
-    @Override
-    public boolean isSpectator() {
-        return false;
+    override fun isSpectator(): Boolean {
+        return false
     }
 
-    @Override
-    public boolean isCreative() {
-        return false;
+    override fun isCreative(): Boolean {
+        return false
     }
 }

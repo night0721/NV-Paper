@@ -1,46 +1,42 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import me.night0721.nv.ui.player.ScoreboardListener;
-import org.bson.Document;
-import org.bson.conversions.Bson;
+import me.night0721.nv.ui.player.ScoreboardListener
+import org.bson.Document
+import org.bson.conversions.Bson
 
-import java.util.HashMap;
-
-public class UserDataManager {
-    public void createUserBank(String uuid) {
-        Document document = new Document();
-        document.put("UUID", uuid);
-        document.put("Bank", 0);
-        new DatabaseManager().getUsersDB().insertOne(document);
+class UserDataManager {
+    fun createUserBank(uuid: String?) {
+        val document = Document()
+        document["UUID"] = uuid
+        document["Bank"] = 0
+        DatabaseManager().usersDB.insertOne(document)
     }
 
-    public void updateUserBank(String uuid, Integer coins, ScoreboardListener... listener) {
-        Document document = new DatabaseManager().getUsersDB().find(new Document("UUID", uuid)).first();
+    fun updateUserBank(uuid: String?, coins: Int, vararg listener: ScoreboardListener) {
+        val document = DatabaseManager().usersDB.find(Document("UUID", uuid)).first()
         if (document != null) {
-            Integer coinsBefore = document.getInteger("Bank");
-            Bson updated = new Document("Bank", coins + coinsBefore);
-            Bson update = new Document("$set", updated);
-            new DatabaseManager().getUsersDB().updateOne(document, update);
-            listener[0].sideBarManager.addBank(uuid, coins);
+            val coinsBefore = document.getInteger("Bank")
+            val updated: Bson = Document("Bank", coins + coinsBefore)
+            val update: Bson = Document("\$set", updated)
+            DatabaseManager().usersDB.updateOne(document, update)
+            listener[0].sideBarManager.addBank(uuid, coins)
         } else {
-            Document doc = new Document();
-            doc.put("UUID", uuid);
-            doc.put("Bank", coins);
-            new DatabaseManager().getUsersDB().insertOne(doc);
-            listener[0].sideBarManager.addBank(uuid, coins);
+            val doc = Document()
+            doc["UUID"] = uuid
+            doc["Bank"] = coins
+            DatabaseManager().usersDB.insertOne(doc)
+            listener[0].sideBarManager.addBank(uuid, coins)
         }
-
-
     }
 
-    public HashMap<String, Object> getUser(String uuid) {
-        Document document = new DatabaseManager().getUsersDB().find(new Document("UUID", uuid)).first();
+    fun getUser(uuid: String?): HashMap<String?, Any?>? {
+        val document = DatabaseManager().usersDB.find(Document("UUID", uuid)).first()
         if (document != null) {
-            HashMap<String, Object> map = new HashMap<>();
-            for (String key : document.keySet()) map.put(key, document.get(key));
-            map.remove("_id");
-            return map;
+            val map = HashMap<String?, Any?>()
+            for (key in document.keys) map[key] = document[key]
+            map.remove("_id")
+            return map
         }
-        return null;
+        return null
     }
 }

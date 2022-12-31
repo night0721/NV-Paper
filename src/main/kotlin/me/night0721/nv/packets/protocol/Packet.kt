@@ -1,4 +1,3 @@
-package me.night0721.nv.packets.protocol;
+package me.night0721.nv.packets.protocol
 
-public interface Packet {
-}
+interface Packet 

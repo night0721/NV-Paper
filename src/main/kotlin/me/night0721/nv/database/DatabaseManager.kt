@@ -1,35 +1,29 @@
-package me.night0721.nv.database;
+package me.night0721.nv.database
 
-import com.mongodb.client.*;
-import org.bson.Document;
+import com.mongodb.client.MongoClients
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
+import org.bson.Document
 
-public class DatabaseManager {
-    public static MongoDatabase database;
-    public void connect() {
-        database = MongoClients.create(System.getenv("MONGODB_URI")).getDatabase("NullValkyrie");
-    }
-    public MongoCollection<Document> getMinersDB() {
-        return database.getCollection("miners");
+class DatabaseManager {
+    fun connect() {
+        database = MongoClients.create(System.getenv("MONGODB_URI")).getDatabase("NullValkyrie")
     }
 
-    public MongoCollection<Document> getShopsDB() {
-        return database.getCollection("shops");
-    }
+    val minersDB: MongoCollection<Document?>
+        get() = database!!.getCollection("miners")
+    val shopsDB: MongoCollection<Document?>
+        get() = database!!.getCollection("shops")
+    val ranksDB: MongoCollection<Document?>
+        get() = database!!.getCollection("ranks")
+    val nPCsDB: MongoCollection<Document?>
+        get() = database!!.getCollection("npcs")
+    val usersDB: MongoCollection<Document?>
+        get() = database!!.getCollection("users")
+    val customWeaponsDB: MongoCollection<Document?>
+        get() = database!!.getCollection("custom_weapons")
 
-    public MongoCollection<Document> getRanksDB() {
-        return database.getCollection("ranks");
+    companion object {
+        var database: MongoDatabase? = null
     }
-
-    public MongoCollection<Document> getNPCsDB() {
-        return database.getCollection("npcs");
-    }
-
-    public MongoCollection<Document> getUsersDB() {
-        return database.getCollection("users");
-    }
-
-    public MongoCollection<Document> getCustomWeaponsDB() {
-        return database.getCollection("custom_weapons");
-    }
-
 }

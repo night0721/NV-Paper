@@ -1,62 +1,66 @@
-package me.night0721.nv.events.listeners;
+package me.night0721.nv.events.listeners
 
-import me.night0721.nv.packets.handle.PacketInjector;
-import me.night0721.nv.util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.boss.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
-import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.event.weather.WeatherChangeEvent;
+import me.night0721.nv.packets.handle.PacketInjector
+import me.night0721.nv.util.Util.centerText
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
+import org.bukkit.boss.BossBar
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerResourcePackStatusEvent
+import org.bukkit.event.server.ServerListPingEvent
+import org.bukkit.event.weather.WeatherChangeEvent
+import java.io.File
 
-import java.io.File;
+class ServerEvents : Listener {
+    val bossbar: BossBar
+    val injector: PacketInjector
 
-public class ServerEvents implements Listener {
-    public final BossBar bossbar;
-    public final PacketInjector injector;
-
-    public ServerEvents() {
-        bossbar = Bukkit.createBossBar(ChatColor.GOLD + "Kuudra", BarColor.RED, BarStyle.SEGMENTED_12);
-        this.injector = new PacketInjector();
+    init {
+        bossbar = Bukkit.createBossBar(ChatColor.GOLD.toString() + "Kuudra", BarColor.RED, BarStyle.SEGMENTED_12)
+        injector = PacketInjector()
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        bossbar.addPlayer(e.getPlayer());
-        injector.addPlayer(e.getPlayer());
+    fun onJoin(e: PlayerJoinEvent) {
+        bossbar.addPlayer(e.player)
+        injector.addPlayer(e.player)
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        injector.removePlayer(e.getPlayer());
+    fun onQuit(e: PlayerQuitEvent) {
+        injector.removePlayer(e.player)
     }
 
     @EventHandler
-    public void onPing(ServerListPingEvent e) {
-        e.setMaxPlayers(8964);
-        String s = Util.centerText("Vanadium", 45);
-        String s2 = Util.centerText("Support 1.19.3", 45);
-        e.setMotd(ChatColor.AQUA.toString() + ChatColor.BOLD + s + "\n" + ChatColor.GOLD + ChatColor.BOLD + s2);
+    fun onPing(e: ServerListPingEvent) {
+        e.maxPlayers = 8964
+        val s = centerText("Vanadium", 45)
+        val s2 = centerText("Support 1.19.3", 45)
+        e.motd = """
+            ${ChatColor.AQUA}${ChatColor.BOLD}$s
+            ${ChatColor.GOLD}${ChatColor.BOLD}$s2
+            """.trimIndent()
         try {
-            e.setServerIcon(Bukkit.loadServerIcon(new File("nuke.png")));
-        } catch (Exception ee) {
-            ee.printStackTrace();
+            e.setServerIcon(Bukkit.loadServerIcon(File("nuke.png")))
+        } catch (ee: Exception) {
+            ee.printStackTrace()
         }
     }
 
     @EventHandler
-    public void onWeatherChange(WeatherChangeEvent e) {
-        e.setCancelled(true);
+    fun onWeatherChange(e: WeatherChangeEvent) {
+        e.isCancelled = true
     }
 
     @EventHandler
-    public void onResourcePackChange(PlayerResourcePackStatusEvent e) {
-        if (e.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || e.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
-            e.getPlayer().kickPlayer("You must download the resource pack to play on this server!");
+    fun onResourcePackChange(e: PlayerResourcePackStatusEvent) {
+        if (e.status == PlayerResourcePackStatusEvent.Status.DECLINED || e.status == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
+            e.player.kickPlayer("You must download the resource pack to play on this server!")
         }
     }
 }

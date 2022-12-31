@@ -1,106 +1,153 @@
-package me.night0721.nv.entities.npcs;
+package me.night0721.nv.entities.npcs
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.datafixers.util.Pair;
-import me.night0721.nv.NullValkyrie;
-import me.night0721.nv.database.NPCDataManager;
-import me.night0721.nv.packets.protocol.PacketPlayOutEntityMetadata;
-import me.night0721.nv.util.*;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.syncher.*;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.EquipmentSlot;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
+import com.mojang.datafixers.util.Pair
+import me.night0721.nv.NullValkyrie
+import me.night0721.nv.database.NPCDataManager
+import me.night0721.nv.packets.protocol.PacketPlayOutEntityMetadata
+import me.night0721.nv.util.Skin.getSkin
+import me.night0721.nv.util.Util.color
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket
+import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.ItemStack
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_19_R1.CraftServer
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack
+import org.bukkit.entity.Player
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-public class NPCManager {
-    private static final HashMap<Integer, ServerPlayer> NPCs = new HashMap<>();
-
-    public static HashMap<Integer, ServerPlayer> getNPCs() {
-        return NPCs;
-    }
-    public static void createNPC(Player player, String name) { // name must be less than 16 characters including color codes
-        ServerPlayer sp = ((CraftPlayer) player).getHandle();
-        MinecraftServer server = sp.server;
-        ServerLevel level = ((CraftWorld) player.getLocation().getWorld()).getHandle();
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), Util.color(name));
-        String[] skin = Skin.getSkin(player);
-        gameProfile.getProperties().put("textures", new Property("textures", skin[0], skin[1]));
-        ServerPlayer npc = new ServerPlayer(server, level, gameProfile, null);
-        Location location = player.getLocation();
-        npc.setPos(location.getX(), location.getY(), location.getZ());
-        addNPCPacket(npc);
-        NPCs.put(npc.getId(), npc);
-        NPCDataManager.setNPC(name, player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), (int) player.getLocation().getPitch(), (int) player.getLocation().getYaw(), player.getLocation().getWorld().getName(), skin[0], skin[1]);
+object NPCManager {
+    private val NPCs = HashMap<Int?, ServerPlayer?>()
+    fun getNPCs(): HashMap<Int?, ServerPlayer?>? {
+        return NPCs
     }
 
-    public static void addNPCPacket(ServerPlayer npc) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            ServerGamePacketListenerImpl pc = ((CraftPlayer) player).getHandle().connection;
-            pc.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
-            pc.send(new ClientboundAddPlayerPacket(npc));
-            pc.send(new ClientboundRotateHeadPacket(npc, (byte) (npc.getBukkitYaw() * 256 / 360)));
-            SynchedEntityData watcher = npc.getEntityData();
-            watcher.set(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) 127);
-            new PacketPlayOutEntityMetadata(player, npc, watcher);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(NullValkyrie.getPlugin(NullValkyrie.class), () -> pc.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc)), 50);
-            ItemStack netheriteAxe = new ItemStack(Material.NETHERITE_AXE);
-            ItemStack anotherAxe = new ItemStack(Material.NETHERITE_INGOT);
-            List<Pair<EquipmentSlot, net.minecraft.world.item.ItemStack>> itemList = new ArrayList<>();
-            itemList.add(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(netheriteAxe)));
-            itemList.add(new Pair<>(EquipmentSlot.OFFHAND, CraftItemStack.asNMSCopy(anotherAxe)));
-            pc.send(new ClientboundSetEquipmentPacket(npc.getBukkitEntity().getEntityId(), itemList));
+    fun createNPC(player: Player, name: String?) { // name must be less than 16 characters including color codes
+        val sp = (player as CraftPlayer).handle
+        val server = sp.server
+        val level = (player.getLocation().world as CraftWorld).handle
+        val gameProfile = GameProfile(UUID.randomUUID(), color(name))
+        val skin = getSkin(player)
+        gameProfile.properties.put("textures", Property("textures", skin[0], skin[1]))
+        val npc = ServerPlayer(server, level, gameProfile, null)
+        val location = player.getLocation()
+        npc.setPos(location.x, location.y, location.z)
+        addNPCPacket(npc)
+        NPCs[npc.id] = npc
+        NPCDataManager.setNPC(
+            name,
+            player.getLocation().x,
+            player.getLocation().y,
+            player.getLocation().z,
+            player.getLocation().pitch.toInt(),
+            player.getLocation().yaw.toInt(),
+            player.getLocation().world.name,
+            skin[0],
+            skin[1]
+        )
+    }
+
+    fun addNPCPacket(npc: ServerPlayer) {
+        for (player in Bukkit.getOnlinePlayers()) {
+            val pc = (player as CraftPlayer).handle.connection
+            pc.send(ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc))
+            pc.send(ClientboundAddPlayerPacket(npc))
+            pc.send(ClientboundRotateHeadPacket(npc, (npc.bukkitYaw * 256 / 360).toByte()))
+            val watcher = npc.entityData
+            watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
+            PacketPlayOutEntityMetadata(player, npc, watcher)
+            Bukkit.getScheduler().runTaskLaterAsynchronously(
+                NullValkyrie.getPlugin(NullValkyrie::class.java)!!,
+                Runnable {
+                    pc.send(
+                        ClientboundPlayerInfoPacket(
+                            ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER,
+                            npc
+                        )
+                    )
+                },
+                50
+            )
+            val netheriteAxe = org.bukkit.inventory.ItemStack(Material.NETHERITE_AXE)
+            val anotherAxe = org.bukkit.inventory.ItemStack(Material.NETHERITE_INGOT)
+            val itemList: MutableList<Pair<EquipmentSlot, ItemStack>> = ArrayList()
+            itemList.add(Pair(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(netheriteAxe)))
+            itemList.add(Pair(EquipmentSlot.OFFHAND, CraftItemStack.asNMSCopy(anotherAxe)))
+            pc.send(ClientboundSetEquipmentPacket(npc.bukkitEntity.entityId, itemList))
         }
     }
 
-    public static void addJoinPacket(Player player) {
-        for (ServerPlayer npc : NPCs.values()) {
-            ServerGamePacketListenerImpl pc = ((CraftPlayer) player).getHandle().connection;
-            pc.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
-            pc.send(new ClientboundAddPlayerPacket(npc));
-            pc.send(new ClientboundRotateHeadPacket(npc, (byte) (npc.getBukkitYaw() * 256 / 360)));
-            SynchedEntityData watcher = npc.getEntityData();
-            watcher.set(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) 127);
-            new PacketPlayOutEntityMetadata(player, npc, watcher);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(NullValkyrie.getPlugin(NullValkyrie.class), () -> pc.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc)), 50);
-            ItemStack netheriteAxe = new ItemStack(Material.NETHERITE_AXE);
-            ItemStack anotherAxe = new ItemStack(Material.NETHERITE_INGOT);
-            List<Pair<EquipmentSlot, net.minecraft.world.item.ItemStack>> itemList = new ArrayList<>();
-            itemList.add(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(netheriteAxe)));
-            itemList.add(new Pair<>(EquipmentSlot.OFFHAND, CraftItemStack.asNMSCopy(anotherAxe)));
-            pc.send(new ClientboundSetEquipmentPacket(npc.getBukkitEntity().getEntityId(), itemList));
+    fun addJoinPacket(player: Player) {
+        for (npc in NPCs.values) {
+            val pc = (player as CraftPlayer).handle.connection
+            pc.send(ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc))
+            pc.send(ClientboundAddPlayerPacket(npc))
+            pc.send(ClientboundRotateHeadPacket(npc, (npc!!.bukkitYaw * 256 / 360).toByte()))
+            val watcher = npc.entityData
+            watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
+            PacketPlayOutEntityMetadata(player, npc, watcher)
+            Bukkit.getScheduler().runTaskLaterAsynchronously(
+                NullValkyrie.getPlugin(NullValkyrie::class.java)!!,
+                Runnable {
+                    pc.send(
+                        ClientboundPlayerInfoPacket(
+                            ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER,
+                            npc
+                        )
+                    )
+                },
+                50
+            )
+            val netheriteAxe = org.bukkit.inventory.ItemStack(Material.NETHERITE_AXE)
+            val anotherAxe = org.bukkit.inventory.ItemStack(Material.NETHERITE_INGOT)
+            val itemList: MutableList<Pair<EquipmentSlot, ItemStack>> = ArrayList()
+            itemList.add(Pair(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(netheriteAxe)))
+            itemList.add(Pair(EquipmentSlot.OFFHAND, CraftItemStack.asNMSCopy(anotherAxe)))
+            pc.send(ClientboundSetEquipmentPacket(npc.bukkitEntity.entityId, itemList))
         }
     }
-    public static void reloadNPC(List<HashMap<String, Object>> npcs) {
-        for (HashMap<String, Object> npc : npcs) {
-            Location location = new Location(Bukkit.getWorld((String) npc.get("world")), (double) npc.get("x"), (double) npc.get("y"), (double) npc.get("z"), (int) npc.get("yaw"), (int) npc.get("pitch"));
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), Util.color((String) npc.get("name")));
-            gameProfile.getProperties().put("textures", new Property("textures", (String) npc.get("texture"), (String) npc.get("signature")));
-            MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
-            ServerLevel w = ((CraftWorld) location.getWorld()).getHandle();
-            ServerPlayer ep = new ServerPlayer(server, w, gameProfile, null);
-            ep.setPos(location.getX(), location.getY(), location.getZ()); // NMS: 1.19.2 https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html absMoveTo
-            addNPCPacket(ep);
-            NPCs.put(ep.getId(), ep);
+
+    fun reloadNPC(npcs: List<HashMap<String, Any>>) {
+        for (npc in npcs) {
+            val location = Location(
+                Bukkit.getWorld((npc["world"] as String?)!!),
+                npc["x"] as Double,
+                npc["y"] as Double,
+                npc["z"] as Double,
+                (npc["yaw"] as Int).toFloat(),
+                (npc["pitch"] as Int).toFloat()
+            )
+            val gameProfile = GameProfile(UUID.randomUUID(), color(npc["name"] as String?))
+            gameProfile.properties.put(
+                "textures",
+                Property("textures", npc["texture"] as String?, npc["signature"] as String?)
+            )
+            val server: MinecraftServer = (Bukkit.getServer() as CraftServer).server
+            val w = (location.world as CraftWorld).handle
+            val ep = ServerPlayer(server, w, gameProfile, null)
+            ep.setPos(
+                location.x,
+                location.y,
+                location.z
+            ) // NMS: 1.19.2 https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html absMoveTo
+            addNPCPacket(ep)
+            NPCs[ep.id] = ep
         }
     }
-    public static ServerPlayer getNPC(int id) {
-        return NPCs.get(id);
+
+    fun getNPC(id: Int): ServerPlayer? {
+        return NPCs[id]
     }
 }

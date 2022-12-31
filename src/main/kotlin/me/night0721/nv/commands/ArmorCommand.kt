@@ -1,75 +1,59 @@
-package me.night0721.nv.commands;
+package me.night0721.nv.commands
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.util.StringUtil;
+import net.md_5.bungee.api.ChatColor
+import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.Material
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.util.StringUtil
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class ArmorCommand extends Command {
-
-    public ArmorCommand() {
-        super("armor", new String[]{}, "Give you a set of armor", "");
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
-            LeatherArmorMeta helmetdata = (LeatherArmorMeta) helmet.getItemMeta();
-            if (helmetdata == null) return;
-            helmetdata.setDisplayName(net.md_5.bungee.api.ChatColor.of("#ff23ff") + "Angeles Helmet");
-            helmetdata.setColor(org.bukkit.Color.fromRGB(2, 2, 58));
-            helmetdata.setUnbreakable(true);
-            helmet.setItemMeta(helmetdata);
-            player.getInventory().addItem(helmet);
-
-            ItemStack cp = new ItemStack(Material.LEATHER_CHESTPLATE);
-            LeatherArmorMeta cpdata = (LeatherArmorMeta) cp.getItemMeta();
-            if (cpdata == null) return;
-            cpdata.setDisplayName(net.md_5.bungee.api.ChatColor.of("#ff23ff") + "Angeles Chestplate");
-            cpdata.setColor(org.bukkit.Color.fromRGB(2, 2, 58));
-            cpdata.setUnbreakable(true);
-            cp.setItemMeta(cpdata);
-            player.getInventory().addItem(cp);
-
-            ItemStack leg = new ItemStack(Material.LEATHER_LEGGINGS);
-            LeatherArmorMeta legdata = (LeatherArmorMeta) leg.getItemMeta();
-            if (legdata == null) return;
-            legdata.setDisplayName(net.md_5.bungee.api.ChatColor.of("#ff23ff") + "Angeles Leggings");
-            legdata.setColor(org.bukkit.Color.fromRGB(2, 2, 58));
-            legdata.setUnbreakable(true);
-            leg.setItemMeta(legdata);
-            player.getInventory().addItem(leg);
-
-            ItemStack boot = new ItemStack(Material.LEATHER_BOOTS);
-            LeatherArmorMeta bootdata = (LeatherArmorMeta) boot.getItemMeta();
-            if (bootdata == null) return;
-            bootdata.setDisplayName(net.md_5.bungee.api.ChatColor.of("#ff23ff") + "Angeles Boots");
-            bootdata.setColor(org.bukkit.Color.fromRGB(2, 2, 58));
-            bootdata.setUnbreakable(true);
-            boot.setItemMeta(legdata);
-            player.getInventory().addItem(boot);
+class ArmorCommand : Command("armor", arrayOf(), "Give you a set of armor", "") {
+    override fun onCommand(sender: CommandSender, args: Array<String>) {
+        if (sender is Player) {
+            val helmet = ItemStack(Material.LEATHER_HELMET)
+            val helmetdata = helmet.itemMeta as LeatherArmorMeta ?: return
+            helmetdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Helmet")
+            helmetdata.setColor(Color.fromRGB(2, 2, 58))
+            helmetdata.isUnbreakable = true
+            helmet.itemMeta = helmetdata
+            sender.inventory.addItem(helmet)
+            val cp = ItemStack(Material.LEATHER_CHESTPLATE)
+            val cpdata = cp.itemMeta as LeatherArmorMeta ?: return
+            cpdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Chestplate")
+            cpdata.setColor(Color.fromRGB(2, 2, 58))
+            cpdata.isUnbreakable = true
+            cp.itemMeta = cpdata
+            sender.inventory.addItem(cp)
+            val leg = ItemStack(Material.LEATHER_LEGGINGS)
+            val legdata = leg.itemMeta as LeatherArmorMeta ?: return
+            legdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Leggings")
+            legdata.setColor(Color.fromRGB(2, 2, 58))
+            legdata.isUnbreakable = true
+            leg.itemMeta = legdata
+            sender.inventory.addItem(leg)
+            val boot = ItemStack(Material.LEATHER_BOOTS)
+            val bootdata = boot.itemMeta as LeatherArmorMeta ?: return
+            bootdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Boots")
+            bootdata.setColor(Color.fromRGB(2, 2, 58))
+            bootdata.isUnbreakable = true
+            boot.itemMeta = legdata
+            sender.inventory.addItem(boot)
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], Arrays.asList("angeles", "widow"), new ArrayList<>());
-        } else if (args.length == 2) {
-            List<String> names = new ArrayList<>();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                names.add(player.getName());
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+        if (args.size == 1) {
+            return StringUtil.copyPartialMatches(args[0], mutableListOf("angeles", "widow"), ArrayList())
+        } else if (args.size == 2) {
+            val names: MutableList<String> = ArrayList()
+            for (player in Bukkit.getOnlinePlayers()) {
+                names.add(player.name)
             }
-            return StringUtil.copyPartialMatches(args[1], names, new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[1], names, ArrayList())
         }
-        return new ArrayList<>();
+        return ArrayList()
     }
 }

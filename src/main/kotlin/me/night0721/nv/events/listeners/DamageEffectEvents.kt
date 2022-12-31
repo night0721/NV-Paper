@@ -1,107 +1,98 @@
-package me.night0721.nv.events.listeners;
+package me.night0721.nv.events.listeners
 
-import me.night0721.nv.NullValkyrie;
-import me.night0721.nv.util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import me.night0721.nv.NullValkyrie
+import me.night0721.nv.util.Util.color
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.World
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
+import org.bukkit.entity.Zombie
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.scheduler.BukkitRunnable
+import java.text.DecimalFormat
+import java.util.function.Consumer
 
-import java.text.DecimalFormat;
-import java.util.*;
-
-public class DamageEffectEvents implements Listener {
-    public final World world = Bukkit.getWorld("world");
-    public final Map<Entity, Integer> indicators = new HashMap<>();
-    private final DecimalFormat formatter = new DecimalFormat("#");
-
+class DamageEffectEvents : Listener {
+    val world = Bukkit.getWorld("world")
+    val indicators: MutableMap<Entity, Int> = HashMap()
+    private val formatter = DecimalFormat("#")
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-        double damage = e.getFinalDamage();
-        if (e.getEntity() instanceof Zombie) {
-            Location loc = e.getEntity().getLocation().clone().add(getRandomOffset(), 1, getRandomOffset());
-            assert world != null;
-            world.spawn(loc, ArmorStand.class, armorStand -> {
-                armorStand.setMarker(true);
-                armorStand.setVisible(false);
-                armorStand.setGravity(false);
-                armorStand.setSmall(true);
-                armorStand.setCustomNameVisible(true);
-                armorStand.setCustomName(Util.color("&c&l" + formatter.format(damage)));
-                indicators.put(armorStand, 30);
-            });
-            removeStands();
+    fun onDamage(e: EntityDamageByEntityEvent) {
+        val damage = e.finalDamage
+        if (e.entity is Zombie) {
+            val loc = e.entity.location.clone().add(randomOffset, 1.0, randomOffset)
+            assert(world != null)
+            world!!.spawn(loc, ArmorStand::class.java) { armorStand: ArmorStand ->
+                armorStand.isMarker = true
+                armorStand.isVisible = false
+                armorStand.setGravity(false)
+                armorStand.isSmall = true
+                armorStand.isCustomNameVisible = true
+                armorStand.customName = color("&c&l" + formatter.format(damage))
+                indicators[armorStand] = 30
+            }
+            removeStands()
         }
     }
 
-    public void removeStands() {
-        new BukkitRunnable() {
-            final Set<Entity> stands = indicators.keySet();
-            final List<Entity> removal = new ArrayList<>();
-
-            @Override
-            public void run() {
-                for (Entity stand : stands) {
-                    int ticksLeft = indicators.get(stand);
+    fun removeStands() {
+        object : BukkitRunnable() {
+            val stands = indicators.keys
+            val removal: MutableList<Entity> = ArrayList()
+            override fun run() {
+                for (stand in stands) {
+                    var ticksLeft = indicators[stand]!!
                     if (ticksLeft == 0) {
-                        stand.remove();
-                        removal.add(stand);
-                        continue;
+                        stand.remove()
+                        removal.add(stand)
+                        continue
                     }
-                    ticksLeft--;
-                    indicators.put(stand, ticksLeft);
+                    ticksLeft--
+                    indicators[stand] = ticksLeft
                 }
-                removal.forEach(stands::remove);
+                removal.forEach(Consumer { o: Entity -> stands.remove(o) })
             }
-        }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie.class), 0L, 1L);
+        }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0L, 1L)
     }
 
-    public boolean isSpawnable(Location loc) {
-        Block feetBlock = loc.getBlock(), headBlock = loc.clone().add(0, 1, 0).getBlock(), upperBlock = loc.clone().add(0, 2, 0).getBlock();
-        return feetBlock.isPassable() && !feetBlock.isLiquid() && headBlock.isPassable() && !headBlock.isLiquid() && upperBlock.isPassable() && !upperBlock.isLiquid();
+    fun isSpawnable(loc: Location): Boolean {
+        val feetBlock = loc.block
+        val headBlock = loc.clone().add(0.0, 1.0, 0.0).block
+        val upperBlock = loc.clone().add(0.0, 2.0, 0.0).block
+        return feetBlock.isPassable && !feetBlock.isLiquid && headBlock.isPassable && !headBlock.isLiquid && upperBlock.isPassable && !upperBlock.isLiquid
     }
 
-    private double getRandomOffset() {
-        double random = Math.random();
-        if (Math.random() > 0.5) random *= -1;
-        return random;
+    private val randomOffset: Double
+        private get() {
+            var random = Math.random()
+            if (Math.random() > 0.5) random *= -1.0
+            return random
+        }
+
+    fun getRandomWithNeg(size: Int): Int {
+        var random = (Math.random() * (size + 1)).toInt()
+        if (Math.random() > 0.5) random *= -1
+        return random
     }
 
-    public int getRandomWithNeg(int size) {
-        int random = (int) (Math.random() * (size + 1));
-        if (Math.random() > 0.5) random *= -1;
-        return random;
+    fun generateRandomCoord(size: Int, world: World?): Location {
+        val ranX = getRandomWithNeg(size)
+        val ranZ = getRandomWithNeg(size)
+        val block = world!!.getHighestBlockAt(ranX, ranZ)
+        return block.location
     }
 
-    public Location generateRandomCoord(int size, World world) {
-        int ranX = getRandomWithNeg(size), ranZ = getRandomWithNeg(size);
-        Block block = world.getHighestBlockAt(ranX, ranZ);
-        return block.getLocation();
-    }
-
-    public Location generateRandomCoordIsSpawnable(int size) {
+    fun generateRandomCoordIsSpawnable(size: Int): Location {
         while (true) {
-            assert world != null;
-            Location coord = generateRandomCoord(size, world);
-            boolean spawnable = isSpawnable(coord);
+            assert(world != null)
+            val coord = generateRandomCoord(size, world)
+            val spawnable = isSpawnable(coord)
             if (spawnable) {
-                return coord;
+                return coord
             }
         }
     }
 }
-//
-//    @EventHandler
-//    public void onEntityDeath(EntityDeathEvent event) {
-//        if (!entities.containsKey(event.getEntity())) return;
-//        event.setDroppedExp(0);
-//        event.getDrops().clear();
-//        entities.remove(event.getEntity()).tryDropLoot(event.getEntity().getLocation());
-//    }
