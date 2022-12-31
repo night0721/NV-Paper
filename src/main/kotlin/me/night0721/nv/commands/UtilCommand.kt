@@ -29,7 +29,7 @@ class UtilCommand : Command("util", arrayOf(), "Give you a tool", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val hh: HashMap<String, Any> = CustomWeaponsDataManager.Companion.getWeapons()
             val cc = ArrayList<String?>()

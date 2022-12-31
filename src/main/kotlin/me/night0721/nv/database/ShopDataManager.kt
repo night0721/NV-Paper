@@ -4,10 +4,11 @@ object ShopDataManager {
     val items: HashMap<String, Int>
         get() {
             val list = HashMap<String, Int>()
-            DatabaseManager().shopsDB.find().cursor().use { cursor ->
-                while (cursor.hasNext()) {
+            DatabaseManager().users.find().cursor().use { cursor ->
+                if (cursor.hasNext()) {
                     val doc = cursor.next()
-                    list[doc.getString("Name")] = doc.getInteger("Price")
+                    if (!doc.isNullOrEmpty())
+                        list[doc.getString("Name")] = doc.getInteger("Price")
                 }
                 return list
             }

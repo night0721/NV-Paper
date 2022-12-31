@@ -33,12 +33,12 @@ class WeaponCommand : Command("weapon", arrayOf(), "Give you a weapon", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
         if (args.size == 1) {
-            val hh: HashMap<String, Any> = CustomWeaponsDataManager.Companion.getWeapons()
+            val hh: HashMap<String, Any> = CustomWeaponsDataManager.weapons
             val cc = ArrayList<String?>()
             for (s in hh.keys) {
-                val item = hh[s] as HashMap<String, Any>?
+                val item = hh[s] as HashMap<*, *>?
                 if (item!!["Type"] == "Weapon") {
                     cc.add(item["Name"] as String?)
                 }

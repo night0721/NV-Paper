@@ -43,7 +43,7 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
             }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0)
             if (entity[0] == null) return
             val list = pk.unpackedData
-            val value = list!![9] as DataItem<Float>
+            val value = list!![9] as DataItem<*>
             println(value.accessor)
             val health = ThreadLocalRandom.current().nextInt(5, 20).toFloat()
             list[9] = DataItem(EntityDataAccessor(value.accessor.id, EntityDataSerializers.FLOAT), health)
@@ -58,7 +58,7 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
             val entityID = getFieldValue(packet, "a") as Int
             val sneak = getFieldValue(packet, "c") as Boolean
             Bukkit.getScheduler().scheduleSyncDelayedTask(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, {
-                val stands: Array<ArmorStand?> = PerPlayerHologram.Companion.getHolograms().get(entityID)
+                val stands: Array<ArmorStand?> = PerPlayerHologram.holograms[entityID]
                     ?: return@scheduleSyncDelayedTask
                 Bukkit.getPluginManager().callEvent(
                     InteractHologramEvent(

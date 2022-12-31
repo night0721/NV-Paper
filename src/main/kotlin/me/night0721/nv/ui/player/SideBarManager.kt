@@ -3,6 +3,9 @@ package me.night0721.nv.ui.player
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.UserDataManager
 import me.night0721.nv.util.Util.color
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -17,12 +20,12 @@ class SideBarManager {
     var board: AnimatedSideBar? = null
     fun setSideBar(player: Player) {
         val board = player.scoreboard
-        val obj: Objective?
-        obj =
+        val obj: Objective? =
             if (board.getObjective("Vanadium") != null) board.getObjective("Vanadium") else board.registerNewObjective(
                 "Vanadium",
                 Criteria.DUMMY,
-                ChatColor.AQUA.toString() + ChatColor.BOLD + ">> Vanadium <<"
+                Component.text().content(">> Vanadium <<").color(NamedTextColor.AQUA)
+                    .decoration(TextDecoration.BOLD, true).build()
             )
         obj!!.displaySlot = DisplaySlot.SIDEBAR
         val hypens = obj.getScore(ChatColor.GOLD.toString() + "=-=-=-=-=-=-=-=")
@@ -41,12 +44,16 @@ class SideBarManager {
         space2.score = 2
         val website = obj.getScore(ChatColor.YELLOW.toString() + "cath.js.org")
         website.score = 1
-        val bankTeam: Team?
-        bankTeam = if (board.getTeam("Bank") != null) board.getTeam("Bank") else board.registerNewTeam("Bank")
+        val bankTeam: Team? =
+            if (board.getTeam("Bank") != null) board.getTeam("Bank") else board.registerNewTeam("Bank")
         bankTeam!!.addEntry(ChatColor.BOLD.toString())
-        bankTeam.prefix = ChatColor.BLUE.toString() + "Bank: "
-        bankTeam.suffix =
-            ChatColor.YELLOW.toString() + UserDataManager().getUser(player.uniqueId.toString())!!["Bank"].toString()
+        bankTeam.prefix(
+            Component.text().content("Bank: ").color(NamedTextColor.BLUE).build()
+        )
+        bankTeam.suffix(
+            Component.text().content(UserDataManager().getUser(player.uniqueId.toString())!!["Bank"].toString())
+                .color(NamedTextColor.YELLOW).build()
+        )
         obj.getScore(ChatColor.BOLD.toString()).score = 3
         player.scoreboard = board
     }
@@ -58,12 +65,10 @@ class SideBarManager {
                 var count = 0
                 fun animate(str: String?) {
                     val board = player.scoreboard
-                    val objective: Objective?
-                    objective =
+                    val objective: Objective? =
                         if (board.getObjective("Vanadium") != null) board.getObjective("Vanadium") else board.registerNewObjective(
-                            "Vanadium",
-                            Criteria.DUMMY,
-                            ChatColor.AQUA.toString() + ChatColor.BOLD + ">> Vanadium <<"
+                            "Vanadium", Criteria.DUMMY, Component.text().content(">> Vanadium <<").color(NamedTextColor.AQUA)
+                                .decoration(TextDecoration.BOLD, true).build()
                         )
                     objective!!.displaySlot = DisplaySlot.SIDEBAR
                     objective.displayName = color(str)
@@ -97,7 +102,9 @@ class SideBarManager {
 
     fun addBank(uuid: String?, amount: Int) {
         val uid = UUID.fromString(uuid)
-        Bukkit.getPlayer(uid)!!.scoreboard.getTeam("Bank")!!.suffix =
-            ChatColor.YELLOW.toString() + UserDataManager().getUser(uuid)!!["Bank"] + ChatColor.WHITE + "+(" + amount + ")"
+        Bukkit.getPlayer(uid)!!.scoreboard.getTeam("Bank")!!.suffix(
+            Component.text().content(UserDataManager().getUser(uuid)!!["Bank"].toString()).color(NamedTextColor.YELLOW)
+                .append(Component.text().content("+($amount)").color(NamedTextColor.WHITE).build()).build()
+        )
     }
 }

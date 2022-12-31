@@ -30,7 +30,7 @@ import java.util.*
 
 object NPCManager {
     private val NPCs = HashMap<Int?, ServerPlayer?>()
-    fun getNPCs(): HashMap<Int?, ServerPlayer?>? {
+    fun getNPCs(): HashMap<Int?, ServerPlayer?> {
         return NPCs
     }
 
@@ -59,12 +59,12 @@ object NPCManager {
         )
     }
 
-    fun addNPCPacket(npc: ServerPlayer) {
+    private fun addNPCPacket(npc: ServerPlayer) {
         for (player in Bukkit.getOnlinePlayers()) {
             val pc = (player as CraftPlayer).handle.connection
             pc.send(ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc))
             pc.send(ClientboundAddPlayerPacket(npc))
-            pc.send(ClientboundRotateHeadPacket(npc, (npc.bukkitYaw * 256 / 360).toByte()))
+            pc.send(ClientboundRotateHeadPacket(npc, (npc.bukkitYaw * 256 / 360).toInt().toByte()))
             val watcher = npc.entityData
             watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
             PacketPlayOutEntityMetadata(player, npc, watcher)
@@ -93,9 +93,10 @@ object NPCManager {
         for (npc in NPCs.values) {
             val pc = (player as CraftPlayer).handle.connection
             pc.send(ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc))
-            pc.send(ClientboundAddPlayerPacket(npc))
-            pc.send(ClientboundRotateHeadPacket(npc, (npc!!.bukkitYaw * 256 / 360).toByte()))
-            val watcher = npc.entityData
+            npc?.let { ClientboundAddPlayerPacket(it) }?.let { pc.send(it) }
+            npc?.let { ClientboundRotateHeadPacket(it, (npc.bukkitYaw * 256 / 360).toInt().toByte()) }
+                ?.let { pc.send(it) }
+            val watcher = npc!!.entityData
             watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
             PacketPlayOutEntityMetadata(player, npc, watcher)
             Bukkit.getScheduler().runTaskLaterAsynchronously(

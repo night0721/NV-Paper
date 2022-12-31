@@ -16,7 +16,7 @@ object NPCDataManager {
         texture: String?,
         signature: String?
     ) {
-        val document = DatabaseManager().npCsDB.find(Document("Name", name)).first()
+        val document = DatabaseManager().npcs.find(Document("Name", name)).first()
         if (document != null) {
             warn("A NPC with this name already exist")
         } else {
@@ -30,35 +30,40 @@ object NPCDataManager {
             newDocument["world"] = world
             newDocument["texture"] = texture
             newDocument["signature"] = signature
-            DatabaseManager().npCsDB.insertOne(newDocument)
+            DatabaseManager().npcs.insertOne(newDocument)
         }
     }
 
     fun reloadNPC() {
         val npcList: MutableList<HashMap<String, Any>> = ArrayList()
-        DatabaseManager().npCsDB.find().cursor().use { cursor ->
+        DatabaseManager().npcs.find().cursor().use { cursor ->
             while (cursor.hasNext()) {
                 val document = cursor.next()
                 val npc = HashMap<String, Any>()
-                val name = document.getString("Name")
-                val x = document.getDouble("x")
-                val y = document.getDouble("y")
-                val z = document.getDouble("z")
-                val pitch = document.getInteger("pitch")
-                val yaw = document.getInteger("yaw")
-                val world = document.getString("world")
-                val texture = document.getString("texture")
-                val signature = document.getString("signature")
-                npc["name"] = name
-                npc["x"] = x
-                npc["y"] = y
-                npc["z"] = z
-                npc["pitch"] = pitch
-                npc["yaw"] = yaw
-                npc["world"] = world
-                npc["texture"] = texture
-                npc["signature"] = signature
-                npcList.add(npc)
+                if (!document.isNullOrEmpty()) {
+                    for (key in document.keys) {
+                        npc[key] = document[key]!!
+                    }
+                }
+//                val name = document.getString("Name")
+//                val x = document.getDouble("x")
+//                val y = document.getDouble("y")
+//                val z = document.getDouble("z")
+//                val pitch = document.getInteger("pitch")
+//                val yaw = document.getInteger("yaw")
+//                val world = document.getString("world")
+//                val texture = document.getString("texture")
+//                val signature = document.getString("signature")
+//                npc["name"] = name
+//                npc["x"] = x
+//                npc["y"] = y
+//                npc["z"] = z
+//                npc["pitch"] = pitch
+//                npc["yaw"] = yaw
+//                npc["world"] = world
+//                npc["texture"] = texture
+//                npc["signature"] = signature
+//                npcList.add(npc)
             }
         }
         NPCManager.reloadNPC(npcList)

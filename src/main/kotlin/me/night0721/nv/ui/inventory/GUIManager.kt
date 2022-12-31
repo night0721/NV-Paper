@@ -1,7 +1,8 @@
 package me.night0721.nv.ui.inventory
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -19,7 +20,9 @@ abstract class GUIManager {
             close = true
             val close = ItemStack(Material.BARRIER)
             val closemeta = close.itemMeta
-            closemeta?.setDisplayName(ChatColor.WHITE.toString() + "Close the menu")
+            closemeta?.displayName(
+                Component.text().content("Close the menu").color(NamedTextColor.WHITE).build()
+            )
             close.itemMeta = closemeta
             GUI!!.setItem(0, close)
         } else close = false
@@ -32,48 +35,11 @@ abstract class GUIManager {
                 27 -> {
                     if (close) {
                         for (i in intArrayOf(
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            19,
-                            20,
-                            21,
-                            22,
-                            23,
-                            24,
-                            25,
-                            26
+                            1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
                         )) GUI!!.setItem(i, frames)
                     } else {
                         for (i in intArrayOf(
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            19,
-                            20,
-                            21,
-                            22,
-                            23,
-                            24,
-                            25,
-                            26
+                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
                         )) GUI!!.setItem(i, frames)
                     }
                 }
@@ -81,52 +47,11 @@ abstract class GUIManager {
                 36 -> {
                     if (close) {
                         for (i in intArrayOf(
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            28,
-                            29,
-                            30,
-                            31,
-                            32,
-                            33,
-                            34,
-                            35
+                            1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
                         )) GUI!!.setItem(i, frames)
                     } else {
                         for (i in intArrayOf(
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            28,
-                            29,
-                            30,
-                            31,
-                            32,
-                            33,
-                            34,
-                            35
+                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
                         )) GUI!!.setItem(i, frames)
                     }
                 }
@@ -134,56 +59,11 @@ abstract class GUIManager {
                 45 -> {
                     if (close) {
                         for (i in intArrayOf(
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            35,
-                            36,
-                            37,
-                            38,
-                            39,
-                            40,
-                            41,
-                            42,
-                            43,
-                            44
+                            1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
                         )) GUI!!.setItem(i, frames)
                     } else {
                         for (i in intArrayOf(
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            35,
-                            36,
-                            37,
-                            38,
-                            39,
-                            40,
-                            41,
-                            42,
-                            43,
-                            44
+                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
                         )) GUI!!.setItem(i, frames)
                     }
                 }
@@ -191,60 +71,11 @@ abstract class GUIManager {
                 54 -> {
                     if (close) {
                         for (i in intArrayOf(
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            35,
-                            36,
-                            44,
-                            45,
-                            46,
-                            47,
-                            48,
-                            49,
-                            50,
-                            51,
-                            52,
-                            53
+                            1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
                         )) GUI!!.setItem(i, frames)
                     } else {
                         for (i in intArrayOf(
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            17,
-                            18,
-                            26,
-                            27,
-                            35,
-                            36,
-                            44,
-                            45,
-                            46,
-                            47,
-                            48,
-                            49,
-                            50,
-                            51,
-                            52,
-                            53
+                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
                         )) GUI!!.setItem(i, frames)
                     }
                 }

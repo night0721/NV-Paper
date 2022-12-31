@@ -10,6 +10,7 @@ class CustomWeaponsDataManager {
         DatabaseManager().customWeaponsDB.find(Filters.eq("Name", itemName)).cursor().use { cursor ->
             while (cursor.hasNext()) {
                 val doc = cursor.next()
+
                 val name = doc.getString("Name")
                 val lore = doc["Lore"] as Document?
                 val ability = lore!!["Ability"] as Document?
@@ -48,7 +49,7 @@ class CustomWeaponsDataManager {
                 item["Name"] = name
                 item["Material"] = Material.matchMaterial(doc.getString("Material"))
                 item["Type"] = doc.getString("Type")
-                item["Rarity"] = doc.getString("Rarity")
+                item["Rarity"] = doc!!.getString("Rarity")
                 item["Lore"] = lores
                 item["Enchants"] = ench
                 item["Attributes"] = attr

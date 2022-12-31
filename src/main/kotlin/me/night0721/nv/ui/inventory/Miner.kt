@@ -1,6 +1,7 @@
 package me.night0721.nv.ui.inventory
 
 import me.night0721.nv.database.MinerDataManager
+import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -14,23 +15,24 @@ class Miner : GUIManager() {
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)
         val a = intArrayOf(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         var counter = 0
-        for (c in MinerDataManager.getMiners().values) {
+        for (c in MinerDataManager.miners.values) {
             if (counter <= 20) {
-                val item = ItemStack(c.type!!)
+                val item = ItemStack(c.getType()!!)
                 val itemMeta = item.itemMeta
                 if (itemMeta != null) {
-                    itemMeta.setDisplayName(c.name)
-                    val lore: MutableList<String> = ArrayList()
-                    lore.add("Level: " + c.level)
-                    lore.add("Rate: " + c.rate)
-                    lore.add("Last Claim: " + SimpleDateFormat("d MMM yyyy HH:mm:ss").format(Date(c.lastclaim)))
-                    itemMeta.lore = lore
+                    itemMeta.displayName(Component.text().content(c.name).build())
+                    val lore: MutableList<Component> = ArrayList()
+                    lore.add(Component.text().content("Level: " + c.level).build())
+                    lore.add(Component.text().content("Rate: " + c.rate).build())
+                    lore.add(Component.text().content("Rate: " + c.rate).build())
+                    lore.add(Component.text().content("Last Claim: " + SimpleDateFormat("d MMM yyyy HH:mm:ss").format(Date(c.lastclaim))).build())
+                    itemMeta.lore(lore)
                     item.setItemMeta(itemMeta)
-                    GUIManager.Companion.GUI!!.setItem(a[counter], item)
+                    GUI!!.setItem(a[counter], item)
                     counter++
                 }
             }
-            player.openInventory(GUIManager.Companion.GUI!!)
+            player.openInventory(GUI!!)
         }
     }
 

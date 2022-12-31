@@ -17,15 +17,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class ScoreboardListener : Listener {
-    val nameTagManager: NameTagManager
-    val sideBarManager: SideBarManager
-    private val belowNameManager: BelowNameManager
-
-    init {
-        nameTagManager = NameTagManager()
-        sideBarManager = SideBarManager()
-        belowNameManager = BelowNameManager()
-    }
+    val nameTagManager: NameTagManager = NameTagManager()
+    val sideBarManager: SideBarManager = SideBarManager()
+    private val belowNameManager: BelowNameManager = BelowNameManager()
 
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
@@ -67,10 +61,9 @@ class ScoreboardListener : Listener {
                 .append(Component.text().content(" joined the server!").color(NamedTextColor.WHITE).build())
                 .build()
         )
-        if (NPCManager.getNPCs() == null) return
-        if (NPCManager.getNPCs()!!.isEmpty()) return
+        if (NPCManager.getNPCs().isEmpty()) return
         NPCManager.addJoinPacket(e.player)
-        CryptoMiner.Companion.onJoin(e.player)
+        CryptoMiner.onJoin(e.player)
     }
 
     @EventHandler

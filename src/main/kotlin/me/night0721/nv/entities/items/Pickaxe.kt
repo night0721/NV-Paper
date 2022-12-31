@@ -5,8 +5,8 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class Pickaxe(item: ItemStack) {
-    val multimap = ArrayListMultimap.create<Material?, Material?>()
-    val phases = HashMap<Material, Long>()
+    val multimap: ArrayListMultimap<Material?, Material?> = ArrayListMultimap.create()
+    private val phases = HashMap<Material, Long>()
     private val itemStack: ItemStack
 
     init {

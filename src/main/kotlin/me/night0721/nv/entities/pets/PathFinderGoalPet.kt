@@ -21,7 +21,7 @@ class PathFinderGoalPet(// our pet
 
     override fun canUse(): Boolean {
         owner = pet.target
-        return if (owner == null) false else if (pet.displayName == null) false else if (!pet.displayName.string.contains(
+        return if (owner == null) false else if (!pet.displayName.string.contains(
                 owner!!.name.string
             )
         ) false else if (owner!!.distanceToSqr(pet) > (distance * distance).toDouble()) {

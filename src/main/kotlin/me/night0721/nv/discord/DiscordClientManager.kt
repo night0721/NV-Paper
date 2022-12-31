@@ -9,7 +9,7 @@ class DiscordClientManager {
         register()
     }
 
-    fun register() {
+    private fun register() {
         val builder = JDABuilder.createDefault(System.getenv("DISCORD_TOKEN"))
         builder.setActivity(Activity.streaming("cath.exe", "https://www.youtube.com/watch?v=YSKDu1gKntY"))
         val jda = builder.build()

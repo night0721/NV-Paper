@@ -10,16 +10,16 @@ import java.util.*
 object RankDataManager {
     fun setRank(uuid: UUID, rank: Rank, vararg listener: ScoreboardListener) {
         // TODO: fix not working in rank command
-        val document = DatabaseManager().ranksDB.find(Document("UUID", uuid.toString())).first()
+        val document = DatabaseManager().ranks.find(Document("UUID", uuid.toString())).first()
         if (document != null) {
             val updated: Bson = Document("Rank", rank.name)
             val update: Bson = Document("\$set", updated)
-            DatabaseManager().ranksDB.updateOne(document, update)
+            DatabaseManager().ranks.updateOne(document, update)
         } else {
             val newDocument = Document()
             newDocument["UUID"] = uuid.toString()
             newDocument["Rank"] = rank.name
-            DatabaseManager().ranksDB.insertOne(newDocument)
+            DatabaseManager().ranks.insertOne(newDocument)
         }
         for (player in Bukkit.getOnlinePlayers()) {
             if (player.hasPlayedBefore()) {
@@ -30,9 +30,10 @@ object RankDataManager {
     }
 
     fun getRank(uuid: UUID): Rank? {
-        DatabaseManager().ranksDB.find(Document("UUID", uuid.toString())).cursor().use { cursor ->
+        DatabaseManager().ranks.find(Document("UUID", uuid.toString())).cursor().use { cursor ->
             while (cursor.hasNext()) {
                 val doc = cursor.next()
+                if (doc.isNullOrEmpty()) return null
                 for (key in doc.keys) {
                     if (key == "Rank") {
                         return Rank.valueOf((doc[key] as String?)!!)

@@ -2,6 +2,7 @@ package me.night0721.nv.ui.player
 
 import me.night0721.nv.database.RankDataManager
 import me.night0721.nv.util.Rank
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Criteria
@@ -11,7 +12,7 @@ import java.util.*
 class NameTagManager {
     fun setNametags(player: Player) {
         val newScoreboard = Bukkit.getScoreboardManager().newScoreboard
-        val obj = newScoreboard.registerNewObjective("TabList", Criteria.DUMMY, "Test")
+        val obj = newScoreboard.registerNewObjective("TabList", Criteria.DUMMY, Component.text().content(" ").build())
         obj.displaySlot = DisplaySlot.PLAYER_LIST
         player.scoreboard = newScoreboard
         for (rank in Rank.values()) {

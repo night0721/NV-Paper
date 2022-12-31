@@ -4,7 +4,8 @@ import me.night0721.nv.entities.miners.CryptoMiner
 import me.night0721.nv.entities.miners.MinerType
 import org.bson.Document
 import org.bson.conversions.Bson
-import org.bukkit.*
+import org.bukkit.Bukkit
+import org.bukkit.Location
 
 object MinerDataManager {
     fun setMiner(
@@ -17,9 +18,9 @@ object MinerDataManager {
         location: Location
     ) {
         val newDocument = Document()
-        newDocument["ID"] = DatabaseManager().minersDB.countDocuments() + 1
+        newDocument["ID"] = DatabaseManager().miners.countDocuments() + 1
         newDocument["Name"] = name
-        newDocument["Material"] = type.getName()
+        newDocument["Material"] = type!!.name
         newDocument["Level"] = level
         newDocument["Rate"] = rate
         newDocument["Enabled"] = enabled
@@ -27,20 +28,20 @@ object MinerDataManager {
         newDocument["x"] = location.x
         newDocument["y"] = location.y
         newDocument["z"] = location.z
-        DatabaseManager().minersDB.insertOne(newDocument)
+        DatabaseManager().miners.insertOne(newDocument)
     }
 
     fun setLastClaim(name: String?) {
-        val document = DatabaseManager().minersDB.find(Document("Name", name)).first()
+        val document = DatabaseManager().miners.find(Document("Name", name)).first()
         if (document != null) {
             val updated: Bson = Document("LastClaim", System.currentTimeMillis())
             val update: Bson = Document("\$set", updated)
-            DatabaseManager().minersDB.updateOne(document, update)
+            DatabaseManager().miners.updateOne(document, update)
         }
     }
 
     fun getLastClaim(id: Long): Long {
-        val doc = DatabaseManager().minersDB.find(Document("ID", id)).first()
+        val doc = DatabaseManager().miners.find(Document("ID", id)).first()
         if (doc != null) {
             for (key in doc.keys) {
                 if (key == "LastClaim") return doc[key] as Long
@@ -52,17 +53,23 @@ object MinerDataManager {
     val miners: HashMap<Long, CryptoMiner>
         get() {
             val list = HashMap<Long, CryptoMiner>()
-            DatabaseManager().minersDB.find().cursor().use { cursor ->
+            DatabaseManager().miners.find().cursor().use { cursor ->
                 while (cursor.hasNext()) {
                     val doc = cursor.next()
-                    list[doc.getLong("ID")] = CryptoMiner(
-                        doc.getString("Name"),
-                        MinerType.Companion.getByName(doc.getString("Material")),
-                        doc.getInteger("Level"),
-                        doc.getDouble("Rate"),
-                        doc.getLong("LastClaim"),
-                        Location(Bukkit.getWorld("world"), doc.getDouble("x"), doc.getDouble("y"), doc.getDouble("z"))
-                    )
+                    if (!doc.isNullOrEmpty())
+                        list[doc.getLong("ID")] = CryptoMiner(
+                            doc.getString("Name"),
+                            MinerType.getByName(doc.getString("Material")),
+                            doc.getInteger("Level"),
+                            doc.getDouble("Rate"),
+                            doc.getLong("LastClaim"),
+                            Location(
+                                Bukkit.getWorld("world"),
+                                doc.getDouble("x"),
+                                doc.getDouble("y"),
+                                doc.getDouble("z")
+                            )
+                        )
                 }
                 return list
             }

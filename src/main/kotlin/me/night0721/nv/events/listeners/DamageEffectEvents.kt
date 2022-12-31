@@ -1,7 +1,9 @@
 package me.night0721.nv.events.listeners
 
 import me.night0721.nv.NullValkyrie
-import me.night0721.nv.util.Util.color
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -31,14 +33,16 @@ class DamageEffectEvents : Listener {
                 armorStand.setGravity(false)
                 armorStand.isSmall = true
                 armorStand.isCustomNameVisible = true
-                armorStand.customName = color("&c&l" + formatter.format(damage))
+                armorStand.customName(
+                    Component.text().content(formatter.format(damage).toString()).color(NamedTextColor.RED).decoration(
+                        TextDecoration.BOLD, true).build())
                 indicators[armorStand] = 30
             }
             removeStands()
         }
     }
 
-    fun removeStands() {
+    private fun removeStands() {
         object : BukkitRunnable() {
             val stands = indicators.keys
             val removal: MutableList<Entity> = ArrayList()
@@ -58,7 +62,7 @@ class DamageEffectEvents : Listener {
         }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0L, 1L)
     }
 
-    fun isSpawnable(loc: Location): Boolean {
+    private fun isSpawnable(loc: Location): Boolean {
         val feetBlock = loc.block
         val headBlock = loc.clone().add(0.0, 1.0, 0.0).block
         val upperBlock = loc.clone().add(0.0, 2.0, 0.0).block
@@ -66,19 +70,19 @@ class DamageEffectEvents : Listener {
     }
 
     private val randomOffset: Double
-        private get() {
+        get() {
             var random = Math.random()
             if (Math.random() > 0.5) random *= -1.0
             return random
         }
 
-    fun getRandomWithNeg(size: Int): Int {
+    private fun getRandomWithNeg(size: Int): Int {
         var random = (Math.random() * (size + 1)).toInt()
         if (Math.random() > 0.5) random *= -1
         return random
     }
 
-    fun generateRandomCoord(size: Int, world: World?): Location {
+    private fun generateRandomCoord(size: Int, world: World?): Location {
         val ranX = getRandomWithNeg(size)
         val ranZ = getRandomWithNeg(size)
         val block = world!!.getHighestBlockAt(ranX, ranZ)

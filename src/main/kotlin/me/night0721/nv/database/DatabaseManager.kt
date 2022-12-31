@@ -10,17 +10,17 @@ class DatabaseManager {
         database = MongoClients.create(System.getenv("MONGODB_URI")).getDatabase("NullValkyrie")
     }
 
-    val minersDB: MongoCollection<Document?>
+    val miners: MongoCollection<Document?>
         get() = database!!.getCollection("miners")
-    val shopsDB: MongoCollection<Document?>
+    val shops: MongoCollection<Document?>
         get() = database!!.getCollection("shops")
-    val ranksDB: MongoCollection<Document?>
+    val ranks: MongoCollection<Document?>
         get() = database!!.getCollection("ranks")
-    val nPCsDB: MongoCollection<Document?>
+    val npcs: MongoCollection<Document?>
         get() = database!!.getCollection("npcs")
-    val usersDB: MongoCollection<Document?>
+    val users: MongoCollection<Document?>
         get() = database!!.getCollection("users")
-    val customWeaponsDB: MongoCollection<Document?>
+    val customweapons: MongoCollection<Document?>
         get() = database!!.getCollection("custom_weapons")
 
     companion object {
