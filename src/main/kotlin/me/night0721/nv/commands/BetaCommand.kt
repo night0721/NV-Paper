@@ -25,7 +25,7 @@ class BetaCommand : Command("beta", arrayOf<String?>("b"), "Beta", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }

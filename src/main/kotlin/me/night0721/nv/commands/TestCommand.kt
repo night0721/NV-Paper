@@ -15,7 +15,7 @@ class TestCommand : Command("test", arrayOf(), "Test", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }

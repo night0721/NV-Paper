@@ -31,7 +31,7 @@ class MessageCommand : Command("message", arrayOf<String?>("msg"), "Send message
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val names: MutableList<String> = ArrayList()
             for (player in Bukkit.getOnlinePlayers()) {

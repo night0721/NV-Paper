@@ -11,7 +11,7 @@ class MenuCommand : Command("menu", arrayOf<String?>("m"), "Open the menu", "") 
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }

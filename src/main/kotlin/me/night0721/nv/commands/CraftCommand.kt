@@ -8,7 +8,7 @@ class CraftCommand : Command("craft", arrayOf<String?>("ct", "crafting", "crafti
         (sender as? Player)?.openWorkbench(null, true)
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }

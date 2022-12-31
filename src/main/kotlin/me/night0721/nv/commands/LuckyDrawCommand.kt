@@ -11,7 +11,7 @@ class LuckyDrawCommand : Command("luckydraw", arrayOf<String?>("ld"), "Generate 
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }

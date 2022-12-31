@@ -44,7 +44,7 @@ class ArmorCommand : Command("armor", arrayOf(), "Give you a set of armor", "") 
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): List<String> {
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             return StringUtil.copyPartialMatches(args[0], mutableListOf("angeles", "widow"), ArrayList())
         } else if (args.size == 2) {

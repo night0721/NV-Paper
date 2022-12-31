@@ -13,7 +13,7 @@ class AnvilCommand : Command("anvil", arrayOf<String?>("av"), "Open anvil", "") 
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>? {
-        return null
+    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+        return ArrayList()
     }
 }
