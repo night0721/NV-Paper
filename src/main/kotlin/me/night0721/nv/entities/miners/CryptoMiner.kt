@@ -32,60 +32,48 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
-import java.util.List
 import java.util.concurrent.ThreadLocalRandom
 
-class CryptoMiner(
+open class CryptoMiner(
     var name: String,
-    val minerType: MinerType?,
+    private val minerType: MinerType?,
     var level: Int,
     val rate: Double,
     val lastclaim: Long,
     val location: Location
 ) {
-    protected val x: Double
-    protected val y: Double
-    protected val z: Double
 
-    init {
-        // Name of the miner
-        // Type of the miner
-        // Percentage generate chance in each tick 20tick per sec
-        x = location.x
-        y = location.y
-        z = location.z
-    }
 
-    fun getType(): Material? {
-        return minerType.getMaterial()
+    fun getType(): Material {
+        return minerType!!.material
     }
 
     fun spawn(player: Player) {
         val stand = ArmorStand((location.world as CraftWorld).handle, location.x + 0.5, location.y, location.z + 0.5)
         stand.isInvulnerable = true
         val head = org.bukkit.inventory.ItemStack(Material.PLAYER_HEAD, 1)
-        val meta = head.itemMeta as SkullMeta ?: return
+        val meta = head.itemMeta as SkullMeta
         val profile = GameProfile(UUID.randomUUID(), null)
         // url method: new String(Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", this.getMinerType().getHeadTexture()).getBytes()));
-        profile.properties.put("textures", Property("textures", minerType.getHeadTexture()))
+        profile.properties.put("textures", Property("textures", minerType!!.headTexture))
         try {
             setFieldValue(meta, "profile", profile)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-        head.setItemMeta(meta)
+        head.itemMeta = meta
         val chest = org.bukkit.inventory.ItemStack(Material.LEATHER_CHESTPLATE)
-        val chestdata = chest.itemMeta as LeatherArmorMeta ?: return
+        val chestdata = chest.itemMeta as LeatherArmorMeta
         chestdata.setColor(Color.fromRGB(2, 2, 58))
-        chest.setItemMeta(chestdata)
+        chest.itemMeta = chestdata
         val leg = org.bukkit.inventory.ItemStack(Material.LEATHER_LEGGINGS)
-        val legdata = leg.itemMeta as LeatherArmorMeta ?: return
+        val legdata = leg.itemMeta as LeatherArmorMeta
         legdata.setColor(Color.fromRGB(2, 2, 58))
-        leg.setItemMeta(legdata)
+        leg.itemMeta = legdata
         val boot = org.bukkit.inventory.ItemStack(Material.LEATHER_BOOTS)
-        val bootdata = boot.itemMeta as LeatherArmorMeta ?: return
+        val bootdata = boot.itemMeta as LeatherArmorMeta
         bootdata.setColor(Color.fromRGB(2, 2, 58))
-        boot.setItemMeta(bootdata)
+        boot.itemMeta = bootdata
         val pick = org.bukkit.inventory.ItemStack(Material.GOLDEN_PICKAXE)
         val list: MutableList<Pair<EquipmentSlot, ItemStack>> = ArrayList()
         list.add(Pair(EquipmentSlot.HEAD, CraftItemStack.asNMSCopy(head)))
@@ -94,7 +82,7 @@ class CryptoMiner(
         list.add(Pair(EquipmentSlot.FEET, CraftItemStack.asNMSCopy(boot)))
         list.add(Pair(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(pick)))
         val gameProfile = GameProfile(UUID.randomUUID(), color(name))
-        gameProfile.properties.put("textures", Property("textures", minerType.getHeadTexture()))
+        gameProfile.properties.put("textures", Property("textures", minerType.headTexture))
         val server: MinecraftServer = (Bukkit.getServer() as CraftServer).server
         val w = (player.location.world as CraftWorld).handle
         val m = ServerPlayer(server, w, gameProfile, null)
@@ -145,7 +133,7 @@ class CryptoMiner(
             val items = ArrayList<org.bukkit.inventory.ItemStack>()
             val random = ThreadLocalRandom.current()
             closest.block.drops.clear()
-            val levels = List.of(
+            val levels = listOf(
                 intArrayOf(1, 3),
                 intArrayOf(2, 5),
                 intArrayOf(3, 7),
@@ -199,7 +187,7 @@ class CryptoMiner(
             )
             items.add(
                 org.bukkit.inventory.ItemStack(
-                    getType()!!, random.nextInt(levels[level][0], levels[level][1])
+                    getType(), random.nextInt(levels[level][0], levels[level][1])
                 )
             )
             closest.block.type = Material.AIR
@@ -221,13 +209,13 @@ class CryptoMiner(
         }
 
         fun reloadMiner() {
-            for (player in Bukkit.getOnlinePlayers()) for (miner in MinerDataManager.getMiners().values) {
+            for (player in Bukkit.getOnlinePlayers()) for (miner in MinerDataManager.miners.values) {
                 miner.spawn(player)
             }
         }
 
         fun onJoin(player: Player) {
-            for (miner in MinerDataManager.getMiners().values) {
+            for (miner in MinerDataManager.miners.values) {
                 miner.spawn(player)
             }
         }

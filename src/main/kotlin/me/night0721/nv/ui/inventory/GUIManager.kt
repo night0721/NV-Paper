@@ -1,8 +1,8 @@
 package me.night0721.nv.ui.inventory
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack
 abstract class GUIManager {
     private var close = false
     abstract fun ui(player: Player)
-    fun init(size: Int, title: String?) {
-        GUI = Bukkit.createInventory(null, size, LegacyComponentSerializer.legacyAmpersand().deserialize(title!!))
+    fun init(size: Int, title: TextComponent) {
+        GUI = Bukkit.createInventory(null, size, title)
     }
 
     fun setCloseButton(boo: Boolean) {

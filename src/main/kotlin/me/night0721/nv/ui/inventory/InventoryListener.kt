@@ -4,8 +4,9 @@ import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.UserDataManager
 import me.night0721.nv.entities.items.Items
 import me.night0721.nv.util.RandomCollection
-import me.night0721.nv.util.RandomCollection.remove
-import me.night0721.nv.util.Util.color
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -19,14 +20,14 @@ class InventoryListener : Listener {
     init {
         randomCollection = RandomCollection()
         for (e in Items.values()) {
-            randomCollection.add(e.weight, e.getName())
+            randomCollection.add(e.weight, e.name)
         }
     }
 
     @EventHandler
     fun onClick(e: InventoryClickEvent) {
         if (e.currentItem == null) return
-        if (e.view.title == Menu.Companion.title) {
+        if (LegacyComponentSerializer.legacyAmpersand().serialize(e.view.title()) == Menu.title) {
             e.isCancelled = true
             val player = e.whoClicked as Player
             when (e.rawSlot) {
@@ -39,7 +40,7 @@ class InventoryListener : Listener {
                 22 -> player.teleport(player.world.spawnLocation)
                 24 -> {
                     player.closeInventory()
-                    player.openInventory(GUIManager.Companion.GUI!!)
+                    player.openInventory(GUIManager.GUI!!)
                     return
                 }
 
@@ -47,26 +48,26 @@ class InventoryListener : Listener {
             }
             player.closeInventory()
         }
-        if (e.view.title == Shop.Companion.title) {
+        if (LegacyComponentSerializer.legacyAmpersand().serialize(e.view.title()) == Shop.title) {
             e.isCancelled = true
             val player = e.whoClicked as Player
             if (e.rawSlot == 0) {
                 player.closeInventory()
             }
         }
-        if (e.view.title == LuckyDraw.Companion.title) {
+        if (LegacyComponentSerializer.legacyAmpersand().serialize(e.view.title()) == LuckyDraw.title) {
             e.isCancelled = true
             val player = e.whoClicked as Player
             if (e.rawSlot == 0) {
                 player.closeInventory()
             } else if (e.rawSlot == 22) {
-                if (randomCollection.all.size == 0) {
+                if (randomCollection.all.isEmpty()) {
                     player.closeInventory()
                     player.sendMessage(ChatColor.RED.toString() + "You already got all the rewards!")
                     return
                 }
                 UserDataManager().updateUserBank(player.uniqueId.toString(), -100)
-                val colors: List<String?> = listOf(
+                val colors: MutableList<String?> = mutableListOf(
                     "WHITE",
                     "ORANGE",
                     "MAGENTA",
@@ -84,22 +85,22 @@ class InventoryListener : Listener {
                     "RED",
                     "BLACK"
                 )
-                val slot1: List<String?> = ArrayList(colors)
-                val slot2: List<String?> = ArrayList(colors)
-                val slot3: List<String?> = ArrayList(colors)
-                val slot4: List<String?> = ArrayList(colors)
-                val slot5: List<String?> = ArrayList(colors)
-                val slot6: List<String?> = ArrayList(colors)
-                val slot7: List<String?> = ArrayList(colors)
-                val slot8: List<String?> = ArrayList(colors)
-                Collections.shuffle(slot1)
-                Collections.shuffle(slot2)
-                Collections.shuffle(slot3)
-                Collections.shuffle(slot4)
-                Collections.shuffle(slot5)
-                Collections.shuffle(slot6)
-                Collections.shuffle(slot7)
-                Collections.shuffle(slot8)
+                val slot1: MutableList<String?> = ArrayList(colors)
+                val slot2: MutableList<String?> = ArrayList(colors)
+                val slot3: MutableList<String?> = ArrayList(colors)
+                val slot4: MutableList<String?> = ArrayList(colors)
+                val slot5: MutableList<String?> = ArrayList(colors)
+                val slot6: MutableList<String?> = ArrayList(colors)
+                val slot7: MutableList<String?> = ArrayList(colors)
+                val slot8: MutableList<String?> = ArrayList(colors)
+                slot1.shuffle()
+                slot2.shuffle()
+                slot3.shuffle()
+                slot4.shuffle()
+                slot5.shuffle()
+                slot6.shuffle()
+                slot7.shuffle()
+                slot8.shuffle()
                 val slots = intArrayOf(11, 13, 15, 20, 24, 29, 31, 33)
                 object : BukkitRunnable() {
                     var i = 0
@@ -115,35 +116,35 @@ class InventoryListener : Listener {
                         for (slot in slots) {
                             if (slot == 11) {
                                 val item = ItemStack(Material.valueOf(slot1[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 13) {
                                 val item = ItemStack(Material.valueOf(slot2[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 15) {
                                 val item = ItemStack(Material.valueOf(slot3[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 20) {
                                 val item = ItemStack(Material.valueOf(slot4[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 24) {
                                 val item = ItemStack(Material.valueOf(slot5[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 29) {
                                 val item = ItemStack(Material.valueOf(slot6[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 31) {
                                 val item = ItemStack(Material.valueOf(slot7[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                             if (slot == 33) {
                                 val item = ItemStack(Material.valueOf(slot8[i] + "_STAINED_GLASS_PANE"), 1)
-                                GUIManager.Companion.GUI!!.setItem(slot, item)
+                                GUIManager.GUI!!.setItem(slot, item)
                             }
                         }
                         i++
@@ -154,39 +155,37 @@ class InventoryListener : Listener {
                 object : BukkitRunnable() {
                     override fun run() {
                         for (slot in slots) {
-                            GUIManager.Companion.GUI!!.setItem(slot, ItemStack(Material.AIR))
+                            GUIManager.GUI!!.setItem(slot, ItemStack(Material.AIR))
                         }
                         val s = randomCollection.getRandom()
                         if (s != null) {
                             randomCollection.remove(s)
                             var slot = 0
-                            for (e in Items.values()) if (e.getName() == s) slot = e.slot
-                            GUIManager.Companion.GUI.remove(Items.Companion.getByName(s).getMaterial())
+                            for (it in Items.values()) if (it.name == s) slot = it.slot
+                            GUIManager.GUI!!.remove(Items.getByName(s)!!.material)
                             val got = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
                             val gotmeta = got.itemMeta
-                            gotmeta.setDisplayName(ChatColor.RED.toString() + "You already got this reward!")
-                            got.setItemMeta(gotmeta)
-                            GUIManager.Companion.GUI!!.setItem(slot, got)
+                            gotmeta.displayName(Component.text().content("You already got this reward!").color(NamedTextColor.RED).build())
+                            got.itemMeta = gotmeta
+                            GUIManager.GUI!!.setItem(slot, got)
                             for (s1 in randomCollection.all) {
-                                val item: ItemStack = ItemStack(Items.Companion.getByName(s1).getMaterial())
+                                val item = ItemStack(Items.getByName(s1)!!.material)
                                 val meta = item.itemMeta
-                                meta.setDisplayName(
-                                    ChatColor.GREEN.toString() + Items.Companion.getByName(s1).getName()
-                                )
-                                val lore = if (meta.lore == null) ArrayList() else meta.lore!!
-                                lore.add(0, "")
-                                lore.add(1, color("&bChance: " + randomCollection.getChance(s1) + "%"))
-                                lore.add(2, Items.Companion.getByName(s1).getRarity().getDisplay())
-                                meta.lore = lore
-                                item.setItemMeta(meta)
-                                GUIManager.Companion.GUI!!.setItem(Items.Companion.getByName(s1).getSlot(), item)
+                                meta.displayName(Component.text().content(Items.getByName(s1)!!.name).color(NamedTextColor.GREEN).build())
+                                val lore = if (meta.lore().isNullOrEmpty()) ArrayList() else meta.lore()!!
+                                lore.add(Component.text().content("").build())
+                                lore.add(LegacyComponentSerializer.legacySection().deserialize("&bChance: " + randomCollection.getChance(s1) + "%"))
+                                lore.add(LegacyComponentSerializer.legacySection().deserialize(Items.getByName(s1)!!.rarity.display))
+                                meta.lore(lore)
+                                item.itemMeta = meta
+                                GUIManager.GUI!!.setItem(Items.getByName(s1)!!.slot, item)
                             }
-                            val it: Items = Items.Companion.getByName(s)
+                            val it: Items = Items.getByName(s)!!
                             val item = ItemStack(it.material, 1)
                             val meta = item.itemMeta ?: return
-                            meta.setDisplayName(ChatColor.GOLD.toString() + it.getName())
-                            meta.lore = java.util.List.of(it.rarity.display)
-                            item.setItemMeta(meta)
+                            meta.displayName(Component.text().content(it.name).color(NamedTextColor.GOLD).build())
+                            meta.lore(listOf(LegacyComponentSerializer.legacySection().deserialize(it.rarity.display)))
+                            item.itemMeta = meta
                             player.inventory.addItem(item)
                         } else player.closeInventory()
                     }
@@ -196,6 +195,6 @@ class InventoryListener : Listener {
     }
 
     companion object {
-        var randomCollection: RandomCollection<String?>
+        lateinit var randomCollection: RandomCollection<String?>
     }
 }

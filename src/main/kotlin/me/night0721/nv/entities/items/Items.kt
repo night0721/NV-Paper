@@ -4,7 +4,7 @@ import me.night0721.nv.entities.miners.Rarity
 import org.bukkit.Material
 
 enum class Items(
-    override val name: String, val weight: Double, val rarity: Rarity, val material: Material, val slot: Int
+    val itemName: String, val weight: Double, val rarity: Rarity, val material: Material, val slot: Int
 ) {
     ETERNALSTARE("Eternal Stare", 29.0, Rarity.LEGENDARY, Material.COAL, 10),  // legendary charm
     MORNINGTEA("Morning Tea", 28.0, Rarity.EPIC, Material.IRON_INGOT, 12),  // epic emote
@@ -20,7 +20,7 @@ enum class Items(
     companion object {
         fun getByName(name: String?): Items? {
             for (item in values()) {
-                if (item.name.equals(name, ignoreCase = true)) {
+                if (item.itemName.equals(name, ignoreCase = true)) {
                     return item
                 }
             }

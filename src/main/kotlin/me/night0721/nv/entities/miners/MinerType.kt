@@ -2,7 +2,7 @@ package me.night0721.nv.entities.miners
 
 import org.bukkit.Material
 
-enum class MinerType(override val name: String, val material: Material, val headTexture: String) {
+enum class MinerType(val type: String, val material: Material, val headTexture: String) {
     DIAMOND(
         "Diamond",
         Material.DIAMOND_ORE,
@@ -57,7 +57,7 @@ enum class MinerType(override val name: String, val material: Material, val head
     companion object {
         fun getByName(name: String?): MinerType? {
             for (type in values()) {
-                if (type.name.equals(name, ignoreCase = true)) {
+                if (type.type.equals(name, ignoreCase = true)) {
                     return type
                 }
             }
