@@ -17,7 +17,7 @@ class NameTagManager {
         player.scoreboard = newScoreboard
         for (rank in Rank.values()) {
             val team = player.scoreboard.registerNewTeam(rank.name)
-            team.prefix = rank.display + " "
+            team.prefix(Component.text().content(rank.display + " ").color(rank.color).build())
         }
         for (target in Bukkit.getOnlinePlayers()) {
             if (player.uniqueId !== target.uniqueId) {
@@ -30,7 +30,7 @@ class NameTagManager {
     fun newTag(player: Player) {
         val rank = RankDataManager.getRank(player.uniqueId)
         for (target in Bukkit.getOnlinePlayers()) {
-            target.scoreboard.getTeam(Objects.requireNonNullElse(rank, Rank.ROOKIE).name)!!.addEntry(player.name)
+            Objects.requireNonNullElse(rank, Rank.ROOKIE)?.let { target.scoreboard.getTeam(it.name) }!!.addEntry(player.name)
         }
     }
 

@@ -2,10 +2,10 @@ package me.night0721.nv.ui.player
 
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.UserDataManager
-import me.night0721.nv.util.Util.color
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -71,7 +71,7 @@ class SideBarManager {
                                 .decoration(TextDecoration.BOLD, true).build()
                         )
                     objective!!.displaySlot = DisplaySlot.SIDEBAR
-                    objective.displayName = color(str)
+                    objective.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(str!!))
                 }
 
                 override fun run() {

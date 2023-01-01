@@ -1,43 +1,51 @@
 package me.night0721.nv.ui.inventory
 
-import org.bukkit.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
 class Menu : GUIManager() {
-    override fun UI(player: Player) {
+    override fun ui(player: Player) {
         init(45, title)
         setCloseButton(true)
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)
-        val KYS = ItemStack(Material.WOODEN_SWORD)
-        val KYSmeta = KYS.itemMeta ?: return
-        KYSmeta.setDisplayName(ChatColor.RED.toString() + "KILL YOURSELF WHEN???")
-        KYSmeta.lore = Arrays.asList(
-            ChatColor.GRAY.toString() + "KYS",
-            ChatColor.WHITE.toString() + ChatColor.BOLD + "COMMON"
+        val kys = ItemStack(Material.WOODEN_SWORD)
+        val kysmeta = kys.itemMeta ?: return
+        kysmeta.displayName(Component.text().content("KYS WHEN?").color(NamedTextColor.RED).build())
+        kysmeta.lore(
+            listOf(
+                Component.text().content("KYS").color(NamedTextColor.GRAY).build(),
+                Component.text().content("COMMON").color(NamedTextColor.WHITE).decoration(TextDecoration.BOLD, true)
+                    .build()
+            )
         )
-        KYS.setItemMeta(KYSmeta)
-        GUIManager.Companion.GUI!!.setItem(20, KYS)
+        kys.itemMeta = kysmeta
+        GUI!!.setItem(20, kys)
         val home = ItemStack(Material.MAP)
         val homemeta = home.itemMeta ?: return
-        homemeta.setDisplayName(ChatColor.BLUE.toString() + "Teleport to home")
-        homemeta.lore = Arrays.asList(
-            ChatColor.GRAY.toString() + "Click to teleport back to home",
-            ChatColor.WHITE.toString() + ChatColor.BOLD + "COMMON"
-        )
-        home.setItemMeta(homemeta)
-        GUIManager.Companion.GUI!!.setItem(22, home)
+        homemeta.displayName(Component.text().content("Teleport to home").color(NamedTextColor.BLUE).build())
+        homemeta.lore(listOf(
+            Component.text().content("Click to teleport back to home").color(NamedTextColor.GRAY).build(),
+            Component.text().content("COMMON").color(NamedTextColor.WHITE).decoration(TextDecoration.BOLD, true)
+                .build()
+        ))
+        home.itemMeta = homemeta
+        GUI!!.setItem(22, home)
         val chest = ItemStack(Material.ENDER_CHEST)
         val chestmeta = chest.itemMeta ?: return
-        chestmeta.setDisplayName(ChatColor.GREEN.toString() + "Open your chest")
-        chestmeta.lore = Arrays.asList(
-            ChatColor.GRAY.toString() + "Click to open the chest",
-            ChatColor.WHITE.toString() + ChatColor.BOLD + "COMMON"
-        )
-        chest.setItemMeta(chestmeta)
-        GUIManager.Companion.GUI!!.setItem(24, chest)
-        player.openInventory(GUIManager.Companion.GUI!!)
+        chestmeta.displayName(Component.text().content("Open your chest").color(NamedTextColor.GREEN).build())
+        chestmeta.lore(listOf(
+            Component.text().content("Click to open the chest").color(NamedTextColor.GRAY).build(),
+            Component.text().content("COMMON").color(NamedTextColor.WHITE).decoration(TextDecoration.BOLD, true)
+                .build()
+        ))
+        chest.itemMeta = chestmeta
+        GUI!!.setItem(24, chest)
+        player.openInventory(GUI!!)
     }
 
     companion object {

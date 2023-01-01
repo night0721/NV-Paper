@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class Shop : GUIManager() {
-    override fun UI(player: Player) {
+    override fun ui(player: Player) {
         init(54, title)
         setCloseButton(true)
         setFrame(true, Material.GREEN_STAINED_GLASS_PANE)
@@ -56,11 +56,11 @@ class Shop : GUIManager() {
                 )
                 itemMeta.lore(lore)
                 item.itemMeta = itemMeta
-                GUIManager.Companion.GUI!!.setItem(a[counter], item)
+                GUI!!.setItem(a[counter], item)
                 counter++
             }
         }
-        player.openInventory(GUIManager.Companion.GUI!!)
+        player.openInventory(GUI!!)
     }
 
     companion object {

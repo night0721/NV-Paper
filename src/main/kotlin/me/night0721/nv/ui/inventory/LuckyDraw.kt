@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class LuckyDraw : GUIManager() {
-    override fun UI(player: Player) {
+    override fun ui(player: Player) {
         init(45, title)
         setCloseButton(true)
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)

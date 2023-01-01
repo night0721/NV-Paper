@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Miner : GUIManager() {
-    override fun UI(player: Player) {
+    override fun ui(player: Player) {
         init(45, title)
         setCloseButton(true)
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)
@@ -27,7 +27,7 @@ class Miner : GUIManager() {
                     lore.add(Component.text().content("Rate: " + c.rate).build())
                     lore.add(Component.text().content("Last Claim: " + SimpleDateFormat("d MMM yyyy HH:mm:ss").format(Date(c.lastclaim))).build())
                     itemMeta.lore(lore)
-                    item.setItemMeta(itemMeta)
+                    item.itemMeta = itemMeta
                     GUI!!.setItem(a[counter], item)
                     counter++
                 }
