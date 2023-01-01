@@ -4,7 +4,7 @@ import org.bukkit.enchantments.Enchantment
 import java.util.*
 
 object EnchantmentManager {
-    val enchants: MutableList<Enchantment?> = ArrayList()
+    private val enchants: MutableList<Enchantment?> = ArrayList()
     fun register() {
         val registeredList: MutableList<Boolean> = ArrayList()
         for (enchantment in Enchantments.values()) {

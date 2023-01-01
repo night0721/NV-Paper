@@ -10,7 +10,7 @@ object Util {
         val builder = StringBuilder()
         val space = ' '
         val distance = (lineLength - text.length) / 2
-        val repeat = space.toString().repeat(Math.max(0, distance))
+        val repeat = space.toString().repeat(0.coerceAtLeast(distance))
         builder.append(repeat)
         builder.append(text)
         builder.append(repeat)
