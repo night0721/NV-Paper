@@ -12,10 +12,10 @@ class WeaponCommand : Command("weapon", arrayOf(), "Give you a weapon", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         val player = sender as Player
         val builder = StringBuilder()
-        if (args.size == 0) {
+        if (args.isEmpty()) {
             player.sendMessage(ChatColor.RED.toString() + "This item doesn't exist")
         } else {
-            val arglist = Arrays.asList(*args)
+            val arglist = listOf(*args)
             for (arg in args) {
                 if (arg == arglist[arglist.size - 1]) {
                     builder.append(arg)
@@ -25,7 +25,7 @@ class WeaponCommand : Command("weapon", arrayOf(), "Give you a weapon", "") {
                 }
             }
             val item = CustomItemManager.produceItem(builder.toString())
-            if (item!!.hasItemMeta()) {
+            if (item.hasItemMeta()) {
                 player.inventory.addItem(item)
             } else {
                 player.sendMessage(ChatColor.RED.toString() + "This item doesn't exist")
@@ -33,7 +33,7 @@ class WeaponCommand : Command("weapon", arrayOf(), "Give you a weapon", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val hh: HashMap<String, Any> = CustomWeaponsDataManager.weapons
             val cc = ArrayList<String?>()

@@ -7,6 +7,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class InteractHologramEvent(val player: Player, val hologram: ArmorStand) : Event(), Cancellable {
+
     private var isCancelled = false
 
     override fun isCancelled(): Boolean {
@@ -22,7 +23,6 @@ class InteractHologramEvent(val player: Player, val hologram: ArmorStand) : Even
     }
 
     companion object {
-        @get:Suppress("unused")
         val handlerList = HandlerList()
     }
 }

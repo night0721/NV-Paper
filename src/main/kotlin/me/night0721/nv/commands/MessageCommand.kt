@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
-class MessageCommand : Command("message", arrayOf<String?>("msg"), "Send message to someone", "") {
+class MessageCommand : Command("message", arrayOf("msg"), "Send message to someone", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
             if (args.size >= 2) {
@@ -31,7 +31,7 @@ class MessageCommand : Command("message", arrayOf<String?>("msg"), "Send message
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val names: MutableList<String> = ArrayList()
             for (player in Bukkit.getOnlinePlayers()) {

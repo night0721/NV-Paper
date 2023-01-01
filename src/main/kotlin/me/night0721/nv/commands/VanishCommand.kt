@@ -27,7 +27,7 @@ class VanishCommand : Command("vanish", arrayOf(), "Turn yourself into invisible
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         return ArrayList()
     }
 }

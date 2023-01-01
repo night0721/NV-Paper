@@ -21,7 +21,6 @@ class RightClickNPCEvent(val player: Player, val npc: ServerPlayer) : Event(), C
     }
 
     companion object {
-        @get:Suppress("unused")
         val handlerList = HandlerList()
     }
 }

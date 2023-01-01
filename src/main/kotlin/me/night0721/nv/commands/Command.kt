@@ -33,9 +33,9 @@ abstract class Command(command: String?, aliases: Array<String?>, description: S
 
     @Throws(IllegalArgumentException::class)
     override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): MutableList<String> {
-        return onTabComplete(sender, args)
+        return sender.onTabComplete(args)
     }
 
     abstract fun onCommand(sender: CommandSender, args: Array<String>)
-    abstract fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String>
+    abstract fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String>
 }

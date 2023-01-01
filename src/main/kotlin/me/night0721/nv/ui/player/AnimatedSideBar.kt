@@ -8,15 +8,14 @@ class AnimatedSideBar(private val uuid: UUID) {
         Tasks[uuid] = id
     }
 
-    fun hasID(): Boolean {
-        return Tasks.containsKey(uuid)
-    }
-
     fun stop() {
         Bukkit.getScheduler().cancelTask(Tasks[uuid]!!)
     }
 
     companion object {
         private val Tasks: MutableMap<UUID, Int> = HashMap()
+        fun hasID(animatedSideBar: AnimatedSideBar): Boolean {
+            return Tasks.containsKey(animatedSideBar.uuid)
+        }
     }
 }

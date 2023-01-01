@@ -7,7 +7,7 @@ import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class BetaCommand : Command("beta", arrayOf<String?>("b"), "Beta", "") {
+class BetaCommand : Command("beta", arrayOf("b"), "Beta", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
             val a = ZombiePet(sender.location, sender)
@@ -25,7 +25,7 @@ class BetaCommand : Command("beta", arrayOf<String?>("b"), "Beta", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         return ArrayList()
     }
 }

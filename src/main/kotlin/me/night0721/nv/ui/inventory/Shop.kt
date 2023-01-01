@@ -4,13 +4,14 @@ import me.night0721.nv.database.ShopDataManager
 import me.night0721.nv.entities.items.CustomItemManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class Shop : GUIManager() {
     override fun ui(player: Player) {
-        init(54, title)
+        init(54, LegacyComponentSerializer.legacyAmpersand().deserialize(Shop.title))
         setCloseButton(true)
         setFrame(true, Material.GREEN_STAINED_GLASS_PANE)
         val list = ShopDataManager.items

@@ -75,7 +75,7 @@ class SideBarManager {
                 }
 
                 override fun run() {
-                    if (!board!!.hasID()) board!!.setID(taskID)
+                    if (!AnimatedSideBar.hasID(board!!)) board!!.setID(taskID)
                     if (count == 13) count = 0
                     when (count) {
                         0 -> animate("&1&l>> &e&lVanadium&1&l <<")

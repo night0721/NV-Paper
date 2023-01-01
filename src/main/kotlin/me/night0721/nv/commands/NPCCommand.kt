@@ -19,7 +19,7 @@ class NPCCommand : Command("npc", arrayOf(), "NPCs", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val cc = listOf("new", "list")
             return StringUtil.copyPartialMatches(args[0], cc, ArrayList())

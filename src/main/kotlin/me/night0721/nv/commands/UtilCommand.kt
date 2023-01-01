@@ -12,7 +12,7 @@ class UtilCommand : Command("util", arrayOf(), "Give you a tool", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         val player = sender as Player
         val s = StringBuilder()
-        val b = Arrays.asList(*args)
+        val b = listOf(*args)
         for (a in args) {
             if (a == b[b.size - 1]) {
                 s.append(a)
@@ -22,19 +22,19 @@ class UtilCommand : Command("util", arrayOf(), "Give you a tool", "") {
             }
         }
         val item = CustomItemManager.produceItem(s.toString())
-        if (item!!.hasItemMeta()) {
+        if (item.hasItemMeta()) {
             player.inventory.addItem(item)
         } else {
             player.sendMessage(ChatColor.RED.toString() + "This item doesn't exist")
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         if (args.size == 1) {
-            val hh: HashMap<String, Any> = CustomWeaponsDataManager.Companion.getWeapons()
+            val hh: HashMap<String, Any> = CustomWeaponsDataManager.weapons
             val cc = ArrayList<String?>()
             for (s in hh.keys) {
-                val item = hh[s] as HashMap<String, Any>?
+                val item = hh[s] as HashMap<*, *>?
                 if (item!!["Type"] == "Util") {
                     cc.add(item["Name"] as String?)
                 }

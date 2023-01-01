@@ -32,7 +32,7 @@ class RankCommand : Command("rank", arrayOf(), "Set rank of players", "nv.rank.a
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         if (args.size == 1) {
             val names: MutableList<String> = ArrayList()
             for (player in Bukkit.getOnlinePlayers()) {

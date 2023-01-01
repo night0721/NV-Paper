@@ -18,7 +18,7 @@ class HologramCommand : Command("hologram", arrayOf(), "Spawn a hologram", "") {
         }
     }
 
-    override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {
+    override fun CommandSender?.onTabComplete(args: Array<String>): MutableList<String> {
         return ArrayList()
     }
 }

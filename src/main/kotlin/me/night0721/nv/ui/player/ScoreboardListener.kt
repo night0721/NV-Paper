@@ -72,7 +72,7 @@ class ScoreboardListener : Listener {
         nameTagManager.removeTag(e.player)
         e.player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
         val board = sideBarManager.board
-        if (board!!.hasID()) board.stop()
+        if (AnimatedSideBar.hasID(board!!)) board.stop()
     }
 
     @EventHandler
