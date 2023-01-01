@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class RightClickNPCEvent(val player: Player, val nPC: ServerPlayer) : Event(), Cancellable {
+class RightClickNPCEvent(val player: Player, val npc: ServerPlayer) : Event(), Cancellable {
     private var isCancelled = false
     override fun isCancelled(): Boolean {
         return isCancelled

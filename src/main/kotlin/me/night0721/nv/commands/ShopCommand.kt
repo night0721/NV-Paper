@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 
 class ShopCommand : Command("7elven", arrayOf<String?>("711", "seven", "7ven"), "Shop", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
-        Shop().UI(sender as Player)
+        Shop().ui(sender as Player)
     }
 
     override fun onTabComplete(sender: CommandSender?, args: Array<String>): MutableList<String> {

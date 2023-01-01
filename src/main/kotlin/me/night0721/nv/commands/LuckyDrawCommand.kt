@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 class LuckyDrawCommand : Command("luckydraw", arrayOf<String?>("ld"), "Generate a lucky draw", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
-            LuckyDraw().UI(sender)
+            LuckyDraw().ui(sender)
         }
     }
 

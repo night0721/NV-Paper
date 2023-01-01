@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 class MenuCommand : Command("menu", arrayOf<String?>("m"), "Open the menu", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
-            Menu().UI(sender)
+            Menu().ui(sender)
         }
     }
 

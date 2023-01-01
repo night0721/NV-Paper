@@ -18,7 +18,7 @@ class MinerCommand : Command("miner", arrayOf("miners"), "Miners", "") {
                 return
             }
             if (args[0].equals("list", ignoreCase = true)) {
-                Miner().UI(sender)
+                Miner().ui(sender)
             } else if (args[0].equals("new", ignoreCase = true)) {
                 val name = args[2]
                 val type: MinerType? = MinerType.getByName(args[1])
