@@ -1,6 +1,6 @@
 package me.night0721.nv.events.listeners
 
-import me.night0721.nv.packets.handle.PacketInjector
+import me.night0721.nv.game.packets.handle.PacketInjector
 import me.night0721.nv.util.Util.centerText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

@@ -5,7 +5,7 @@ import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.MinerDataManager
-import me.night0721.nv.packets.protocol.PacketPlayOutEntityMetadata
+import me.night0721.nv.game.packets.protocol.PacketPlayOutEntityMetadata
 import me.night0721.nv.util.Util.color
 import me.night0721.nv.util.Util.info
 import me.night0721.nv.util.Util.setFieldValue

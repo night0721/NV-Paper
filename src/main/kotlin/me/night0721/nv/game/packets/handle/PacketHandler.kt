@@ -1,4 +1,4 @@
-package me.night0721.nv.packets.handle
+package me.night0721.nv.game.packets.handle
 
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext

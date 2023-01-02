@@ -4,7 +4,7 @@ import me.night0721.nv.NullValkyrie
 import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.entities.miners.Rarity
-import me.night0721.nv.packets.protocol.PacketPlayOutBlockBreakAnimation
+import me.night0721.nv.game.packets.protocol.PacketPlayOutBlockBreakAnimation
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer

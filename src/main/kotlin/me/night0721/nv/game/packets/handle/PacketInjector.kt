@@ -1,6 +1,6 @@
-package me.night0721.nv.packets.handle
+package me.night0721.nv.game.packets.handle
 
-import me.night0721.nv.packets.protocol.Channel
+import me.night0721.nv.game.packets.protocol.Channel
 import org.bukkit.entity.Player
 
 class PacketInjector {

@@ -1,7 +1,7 @@
 package me.night0721.nv.entities.holograms
 
-import me.night0721.nv.packets.protocol.PacketPlayOutEntityMetadata
-import me.night0721.nv.packets.protocol.PacketPlayOutSpawnEntity
+import me.night0721.nv.game.packets.protocol.PacketPlayOutEntityMetadata
+import me.night0721.nv.game.packets.protocol.PacketPlayOutSpawnEntity
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers

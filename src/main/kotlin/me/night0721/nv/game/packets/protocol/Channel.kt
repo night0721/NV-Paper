@@ -1,4 +1,4 @@
-package me.night0721.nv.packets.protocol
+package me.night0721.nv.game.packets.protocol
 
 import io.netty.channel.Channel
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer

@@ -1,4 +1,4 @@
-package me.night0721.nv.packets.protocol
+package me.night0721.nv.game.packets.protocol
 
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
