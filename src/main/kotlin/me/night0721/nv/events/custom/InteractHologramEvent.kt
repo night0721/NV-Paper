@@ -23,6 +23,7 @@ class InteractHologramEvent(val player: Player, val hologram: ArmorStand) : Even
     }
 
     companion object {
+        @JvmStatic
         val handlerList = HandlerList()
     }
 }

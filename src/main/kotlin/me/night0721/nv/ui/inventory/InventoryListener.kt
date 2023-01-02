@@ -151,7 +151,7 @@ class InventoryListener : Listener {
                         ii++
                         time++
                     }
-                }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 1L, 5L)
+                }.runTaskTimer(NullValkyrie.getPlugin(), 1L, 5L)
                 object : BukkitRunnable() {
                     override fun run() {
                         for (slot in slots) {
@@ -189,7 +189,7 @@ class InventoryListener : Listener {
                             player.inventory.addItem(item)
                         } else player.closeInventory()
                     }
-                }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 5L * 20L)
+                }.runTaskLater(NullValkyrie.getPlugin(), 5L * 20L)
             }
         }
     }

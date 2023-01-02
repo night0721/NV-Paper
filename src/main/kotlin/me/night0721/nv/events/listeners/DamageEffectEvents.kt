@@ -59,7 +59,7 @@ class DamageEffectEvents : Listener {
                 }
                 removal.forEach(Consumer { o: Entity -> stands.remove(o) })
             }
-        }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0L, 1L)
+        }.runTaskTimer(NullValkyrie.getPlugin(), 0L, 1L)
     }
 
     private fun isSpawnable(loc: Location): Boolean {

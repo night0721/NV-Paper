@@ -69,7 +69,7 @@ object NPCManager {
             watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
             PacketPlayOutEntityMetadata(player, npc, watcher)
             Bukkit.getScheduler().runTaskLaterAsynchronously(
-                NullValkyrie.getPlugin(NullValkyrie::class.java)!!,
+                NullValkyrie.getPlugin(),
                 Runnable {
                     pc.send(
                         ClientboundPlayerInfoPacket(
@@ -100,7 +100,7 @@ object NPCManager {
             watcher.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), 127.toByte())
             PacketPlayOutEntityMetadata(player, npc, watcher)
             Bukkit.getScheduler().runTaskLaterAsynchronously(
-                NullValkyrie.getPlugin(NullValkyrie::class.java)!!,
+                NullValkyrie.getPlugin(),
                 Runnable {
                     pc.send(
                         ClientboundPlayerInfoPacket(

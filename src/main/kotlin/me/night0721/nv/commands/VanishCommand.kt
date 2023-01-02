@@ -14,13 +14,13 @@ class VanishCommand : Command("vanish", arrayOf(), "Turn yourself into invisible
             if (vanished.contains(sender.uniqueId)) {
                 vanished.remove(sender.uniqueId)
                 for (target in Bukkit.getOnlinePlayers()) {
-                    target.showPlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, sender)
+                    target.showPlayer(NullValkyrie.getPlugin(), sender)
                 }
                 sender.sendMessage(ChatColor.GREEN.toString() + "You are now seen by people")
             } else {
                 vanished.add(sender.uniqueId)
                 for (target in Bukkit.getOnlinePlayers()) {
-                    target.hidePlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, sender)
+                    target.hidePlayer(NullValkyrie.getPlugin(), sender)
                 }
                 sender.sendMessage(ChatColor.GREEN.toString() + "You are now vanished")
             }

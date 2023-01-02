@@ -61,7 +61,7 @@ class SideBarManager {
     fun start(player: Player) {
         board = AnimatedSideBar(player.uniqueId)
         taskID = Bukkit.getScheduler()
-            .scheduleSyncRepeatingTask(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, object : Runnable {
+            .scheduleSyncRepeatingTask(NullValkyrie.getPlugin(), object : Runnable {
                 var count = 0
                 fun animate(str: String?) {
                     val board = player.scoreboard

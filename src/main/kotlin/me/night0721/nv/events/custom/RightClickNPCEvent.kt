@@ -21,6 +21,7 @@ class RightClickNPCEvent(val player: Player, val npc: ServerPlayer) : Event(), C
     }
 
     companion object {
+        @JvmStatic
         val handlerList = HandlerList()
     }
 }

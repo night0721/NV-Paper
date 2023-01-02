@@ -99,7 +99,7 @@ open class CryptoMiner(
             override fun run() {
                 generate()
             }
-        }.runTaskTimer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0, 40)
+        }.runTaskTimer(NullValkyrie.getPlugin(), 0, 40)
     }
 
     fun generate() {

@@ -40,7 +40,7 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
                         }
                     }
                 }
-            }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 0)
+            }.runTaskLater(NullValkyrie.getPlugin(), 0)
             if (entity[0] == null) return
             val list = pk.unpackedData
             val value = list!![9] as DataItem<*>
@@ -57,7 +57,7 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
             val pk = packet as ServerboundInteractPacket
             val entityID = getFieldValue(packet, "a") as Int
             val sneak = getFieldValue(packet, "c") as Boolean
-            Bukkit.getScheduler().scheduleSyncDelayedTask(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(NullValkyrie.getPlugin(), {
                 val stands: Array<ArmorStand?> = PerPlayerHologram.holograms[entityID]
                     ?: return@scheduleSyncDelayedTask
                 Bukkit.getPluginManager().callEvent(
@@ -80,8 +80,7 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
                 //Right Click
                 if (npc.bukkitEntity.entityId == entityID && sneak) Bukkit.getScheduler().scheduleSyncDelayedTask(
                     NullValkyrie.getPlugin(
-                        NullValkyrie::class.java
-                    )!!, { Bukkit.getPluginManager().callEvent(RightClickNPCEvent(player, npc)) }, 0
+                    ), { Bukkit.getPluginManager().callEvent(RightClickNPCEvent(player, npc)) }, 0
                 )
             } catch (x: NoSuchFieldException) {
                 //Left Click

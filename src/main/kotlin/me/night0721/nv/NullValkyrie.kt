@@ -35,8 +35,9 @@ class NullValkyrie : JavaPlugin() {
     }
 
     companion object {
-        fun <T> getPlugin(java: Class<T>): Plugin? {
-            return Bukkit.getPluginManager().getPlugin(java.name)
+        @JvmStatic
+        fun getPlugin(): Plugin {
+            return Bukkit.getPluginManager().getPlugin("NullValkyrie")!!
         }
     }
 }

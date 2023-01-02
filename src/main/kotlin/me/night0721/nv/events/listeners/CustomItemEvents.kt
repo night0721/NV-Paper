@@ -240,17 +240,17 @@ class CustomItemEvents : Listener {
                         if (e.damager is Player) ChatColor.RED.toString() + player.name + " has been killed by " + e.damager.name
                         else ChatColor.RED.toString() + player.name + " died"
                     )
-                    p.hidePlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, player)
+                    p.hidePlayer(NullValkyrie.getPlugin(), player)
                 }
                 object : BukkitRunnable() {
                     override fun run() {
                         for (p in Bukkit.getOnlinePlayers()) {
-                            p.showPlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, player)
+                            p.showPlayer(NullValkyrie.getPlugin(), player)
                         }
                         player.health = 20.0
                         player.teleport(DamageEffectEvents.generateRandomCoord(9, Bukkit.getWorld("world")))
                     }
-                }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 100L)
+                }.runTaskLater(NullValkyrie.getPlugin(), 100L)
                 countDown(player, intArrayOf(5))
             }
         }
@@ -260,8 +260,7 @@ class CustomItemEvents : Listener {
     private fun countDown(player: Player, a: IntArray) {
         taskID = Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(
             NullValkyrie.getPlugin(
-                NullValkyrie::class.java
-            )!!, {
+            ), {
                 player.showTitle(
                     Title.title(
                         Component.text().append(Component.text().content("YOU DIED!").color(NamedTextColor.RED).build())

@@ -99,7 +99,7 @@ object CustomItemManager {
         val pdcdata = weapon["PDC"] as HashMap<String, Any>?
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
-            val key1 = NamespacedKey(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, key)
+            val key1 = NamespacedKey(NullValkyrie.getPlugin(), key)
             keys[Rarity.getRarity(weapon["Rarity"] as String?).color + weapon["Name"] + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
@@ -122,7 +122,7 @@ object CustomItemManager {
         ingredients: HashMap<Char, Material?>,
         amount: Int
     ) {
-        val nsk = NamespacedKey(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, key!!.replace("\\s".toRegex(), ""))
+        val nsk = NamespacedKey(NullValkyrie.getPlugin(), key!!.replace("\\s".toRegex(), ""))
         val recipe = ShapedRecipe(nsk, i!!)
         recipe.shape(shapes!![0], shapes[1], shapes[2])
         val abcs = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')

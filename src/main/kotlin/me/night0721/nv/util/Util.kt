@@ -46,11 +46,11 @@ object Util {
 
     @JvmStatic
     fun info(obj: Any) {
-        NullValkyrie.getPlugin(NullValkyrie::class.java)?.logger?.info(color(obj.toString()))
+        NullValkyrie.getPlugin().logger.info(color(obj.toString()))
     }
 
     @JvmStatic
     fun warn(string: String?) {
-        NullValkyrie.getPlugin(NullValkyrie::class.java)?.logger?.warning(color(string))
+        NullValkyrie.getPlugin().logger.warning(color(string))
     }
 }
