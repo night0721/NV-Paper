@@ -4,6 +4,7 @@ import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.CustomWeaponsDataManager
 import me.night0721.nv.entities.miners.Rarity
 import me.night0721.nv.util.Util.capitalize
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -14,20 +15,23 @@ import java.util.*
 
 object CustomItemManager {
     val keys = HashMap<String?, NamespacedKey?>()
+    @Suppress("unchecked_cast")
     fun produceItem(itemName: String?): ItemStack {
         val weapon = CustomWeaponsDataManager().getWeapon(itemName)
-        val item = ItemStack((weapon!!["Material"] as Material?)!!)
+        val item = ItemStack((weapon["Material"] as Material?)!!)
         val propertiesList: MutableList<String> = ArrayList()
         val itemAbility: MutableList<String> = ArrayList()
         val enchants = weapon["Enchants"] as HashMap<String, Any>?
         val attributes = weapon["Attributes"] as HashMap<String, Any>?
-        for (enchant in enchants!!.keys) item.addUnsafeEnchantment(
-            Objects.requireNonNull(
-                Enchantment.getByKey(
-                    NamespacedKey.minecraft(enchant)
-                )
-            ), (enchants[enchant] as Int?)!!
-        )
+        for (enchant in enchants!!.keys) Objects.requireNonNull(
+            Enchantment.getByKey(
+                NamespacedKey.minecraft(enchant)
+            )
+        )?.let {
+            item.addUnsafeEnchantment(
+                it, (enchants[enchant] as Int?)!!
+            )
+        }
         val lore = weapon["Lore"] as HashMap<String, Any>?
         val ability = lore!!["Ability"] as HashMap<String, Any?>?
         val properties = lore["Properties"] as HashMap<String, Any>?
@@ -41,14 +45,14 @@ object CustomItemManager {
             for (line in (ability["Details"] as List<String>?)!!) itemAbility.add(ChatColor.GRAY.toString() + line)
         }
         val itemMeta = item.itemMeta ?: return item
-        itemMeta.setDisplayName(Rarity.Companion.getRarity(weapon["Rarity"] as String?).getColor() + weapon["Name"])
+        itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(Rarity.getRarity(weapon["Rarity"] as String?).color + weapon["Name"]))
         itemMeta.isUnbreakable = true
         val loreList = ArrayList(propertiesList)
         loreList.add("")
         val enchantmentList = ArrayList<String>()
         for (enchantment in item.enchantments.keys) {
-            val split = Arrays.asList(
-                *Arrays.asList(
+            val split = listOf(
+                *listOf(
                     *enchantment.key.toString().split(":".toRegex()).dropLastWhile { it.isEmpty() }
                         .toTypedArray())[1].split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             )
@@ -68,7 +72,7 @@ object CustomItemManager {
         loreList.add("")
         loreList.addAll(itemAbility)
         loreList.add("")
-        loreList.add(Rarity.Companion.getRarity(weapon["Rarity"] as String?).getDisplay())
+        loreList.add(Rarity.getRarity(weapon["Rarity"] as String?).display)
         itemMeta.lore = loreList
         for (attribute in attributes!!.keys) {
             if (attribute == "damage") {
@@ -96,10 +100,10 @@ object CustomItemManager {
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
             val key1 = NamespacedKey(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, key)
-            keys[Rarity.Companion.getRarity(weapon["Rarity"] as String?).getColor() + weapon["Name"] + "." + key] = key1
+            keys[Rarity.getRarity(weapon["Rarity"] as String?).color + weapon["Name"] + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
-        item.setItemMeta(itemMeta)
+        item.itemMeta = itemMeta
         val recipes = weapon["Recipes"] as HashMap<String, Any?>?
         if (recipes!!["Shape"] != null) {
             val shapes = recipes["Shape"] as List<String>?
@@ -111,7 +115,7 @@ object CustomItemManager {
         return item
     }
 
-    fun setItemRecipe(
+    private fun setItemRecipe(
         key: String?,
         i: ItemStack?,
         shapes: List<String>?,

@@ -11,7 +11,7 @@ import java.util.*
 
 class Miner : GUIManager() {
     override fun ui(player: Player) {
-        init(45, LegacyComponentSerializer.legacyAmpersand().deserialize(Miner.title))
+        init(45, LegacyComponentSerializer.legacyAmpersand().deserialize(title))
         setCloseButton(true)
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)
         val a = intArrayOf(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)

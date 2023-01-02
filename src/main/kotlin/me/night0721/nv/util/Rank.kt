@@ -7,20 +7,4 @@ enum class Rank(val display: String, val color: NamedTextColor) {
     ADMIN("<ADMIN>", NamedTextColor.RED),
     SPECIAL("<SPECIAL>", NamedTextColor.GOLD),
     ROOKIE("<ROOKIE>", NamedTextColor.DARK_GREEN);
-
-    companion object {
-        fun getRank(rank: String): Rank {
-            return when (rank) {
-                "OWNER" -> OWNER
-                "ADMIN" -> ADMIN
-                "SPECIAL" -> SPECIAL
-                "ROOKIE" -> ROOKIE
-                else -> ROOKIE
-            }
-        }
-
-        fun getDisplay(rank: String): String {
-            return getRank(rank).display
-        }
-    }
 }

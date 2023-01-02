@@ -32,7 +32,11 @@ class ScoreboardListener : Listener {
                         .append(Component.text().content("Welcome to Vanadium!").color(NamedTextColor.RED).build())
                         .build(), Component.text().append(
                         Component.text().content("Hello!").color(NamedTextColor.GREEN).build()
-                    ).build()
+                    ).build(), Title.Times.times(
+                        java.time.Duration.ofSeconds(0),
+                        java.time.Duration.ofSeconds(1),
+                        java.time.Duration.ofSeconds(0)
+                    )
                 )
             )
             RankDataManager.setRank(player.uniqueId, Rank.ROOKIE, this)
@@ -55,11 +59,9 @@ class ScoreboardListener : Listener {
         belowNameManager.setBelowName(player)
         val rank = RankDataManager.getRank(player.uniqueId)
         e.joinMessage(
-            Component.text()
-                .append(Component.text().content(rank!!.display + " ").color(rank.color).build())
+            Component.text().append(Component.text().content(rank!!.display + " ").color(rank.color).build())
                 .append(Component.text().content(player.name).color(rank.color).build())
-                .append(Component.text().content(" joined the server!").color(NamedTextColor.WHITE).build())
-                .build()
+                .append(Component.text().content(" joined the server!").color(NamedTextColor.WHITE).build()).build()
         )
         if (NPCManager.getNPCs().isEmpty()) return
         NPCManager.addJoinPacket(e.player)
@@ -81,15 +83,12 @@ class ScoreboardListener : Listener {
         val player = e.player
         val rank = RankDataManager.getRank(player.uniqueId)
         Bukkit.broadcast(
-            Component.text()
-                .append(Component.text().content(rank!!.display + " ").color(rank.color).build())
+            Component.text().append(Component.text().content(rank!!.display + " ").color(rank.color).build())
                 .append(Component.text().content(player.name).color(rank.color).build())
-                .append(Component.text().content(": ").color(NamedTextColor.WHITE).build())
-                .append(
+                .append(Component.text().content(": ").color(NamedTextColor.WHITE).build()).append(
                     Component.text().content((e.message() as TextComponent).content()).color(NamedTextColor.WHITE)
                         .build()
-                )
-                .build()
+                ).build()
         )
     }
 }

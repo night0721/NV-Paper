@@ -1,16 +1,14 @@
 package me.night0721.nv.commands
 
+import me.night0721.nv.entities.players.Techno
 import org.bukkit.command.CommandSender
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 
-class TestCommand : Command("test", arrayOf(), "Test", "") {
+class TechnobladeCommand : Command("techno", arrayOf("technoblade"), "Spawns technoblade", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
-            if (args.size == 1) {
-                if (args[0].equals("hello", ignoreCase = true)) {
-                    sender.sendMessage(sender.address.hostString)
-                }
-            }
+            Techno(sender.location, (sender as CraftPlayer).handle)
         }
     }
 

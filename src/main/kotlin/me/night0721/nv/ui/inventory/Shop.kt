@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 
 class Shop : GUIManager() {
     override fun ui(player: Player) {
-        init(54, LegacyComponentSerializer.legacyAmpersand().deserialize(Shop.title))
+        init(54, LegacyComponentSerializer.legacyAmpersand().deserialize(title))
         setCloseButton(true)
         setFrame(true, Material.GREEN_STAINED_GLASS_PANE)
         val list = ShopDataManager.items

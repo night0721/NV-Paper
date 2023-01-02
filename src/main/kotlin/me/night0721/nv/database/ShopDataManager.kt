@@ -4,7 +4,7 @@ object ShopDataManager {
     val items: HashMap<String, Int>
         get() {
             val list = HashMap<String, Int>()
-            DatabaseManager().users.find().cursor().use { cursor ->
+            DatabaseManager().shops.find().cursor().use { cursor ->
                 if (cursor.hasNext()) {
                     val doc = cursor.next()
                     if (!doc.isNullOrEmpty())

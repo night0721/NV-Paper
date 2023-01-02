@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 
 class LuckyDraw : GUIManager() {
     override fun ui(player: Player) {
-        init(45, LegacyComponentSerializer.legacyAmpersand().deserialize(LuckyDraw.title))
+        init(45, LegacyComponentSerializer.legacyAmpersand().deserialize(title))
         setCloseButton(true)
         setFrame(true, Material.BLUE_STAINED_GLASS_PANE)
         val slots = intArrayOf(10, 12, 14, 16, 28, 30, 32, 34, 19, 25)

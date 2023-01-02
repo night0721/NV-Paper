@@ -76,18 +76,9 @@ class DamageEffectEvents : Listener {
             return random
         }
 
-    private fun getRandomWithNeg(size: Int): Int {
-        var random = (Math.random() * (size + 1)).toInt()
-        if (Math.random() > 0.5) random *= -1
-        return random
-    }
 
-    private fun generateRandomCoord(size: Int, world: World?): Location {
-        val ranX = getRandomWithNeg(size)
-        val ranZ = getRandomWithNeg(size)
-        val block = world!!.getHighestBlockAt(ranX, ranZ)
-        return block.location
-    }
+
+
 
     fun generateRandomCoordIsSpawnable(size: Int): Location {
         while (true) {
@@ -97,6 +88,20 @@ class DamageEffectEvents : Listener {
             if (spawnable) {
                 return coord
             }
+        }
+    }
+
+    companion object {
+        private fun getRandomWithNeg(size: Int): Int {
+            var random = (Math.random() * (size + 1)).toInt()
+            if (Math.random() > 0.5) random *= -1
+            return random
+        }
+        fun generateRandomCoord(size: Int, world: World?): Location {
+            val ranX = getRandomWithNeg(size)
+            val ranZ = getRandomWithNeg(size)
+            val block = world!!.getHighestBlockAt(ranX, ranZ)
+            return block.location
         }
     }
 }

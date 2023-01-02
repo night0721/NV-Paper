@@ -19,5 +19,6 @@ class CommandManager {
         MinerCommand()
         LuckyDrawCommand()
         NPCCommand()
+        TechnobladeCommand()
     }
 }

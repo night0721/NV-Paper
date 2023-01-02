@@ -9,7 +9,7 @@ import org.bukkit.util.StringUtil
 class NPCCommand : Command("npc", arrayOf(), "NPCs", "") {
     override fun onCommand(sender: CommandSender, args: Array<String>) {
         if (sender is Player) {
-            if (args.size == 0) {
+            if (args.isEmpty()) {
                 sender.sendMessage(ChatColor.RED.toString() + "Invalid command")
                 return
             }

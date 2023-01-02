@@ -5,8 +5,10 @@ import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.entities.miners.Rarity
 import me.night0721.nv.packets.protocol.PacketPlayOutBlockBreakAnimation
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.title.Title
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -18,6 +20,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Merchant
 import org.bukkit.inventory.MerchantRecipe
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class CustomItemEvents : Listener {
@@ -82,31 +85,28 @@ class CustomItemEvents : Listener {
                             ammoKey, PersistentDataType.INTEGER
                         )!! else 0
                         container.set(ammoKey, PersistentDataType.INTEGER, ammo - 1)
-                        val max = container.get(CustomItemManager.keys["$name.max"], PersistentDataType.INTEGER)!!
-                        weapon.setItemMeta(weaponMeta)
-                        e.player.spigot().sendMessage(
-                            ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(
-                                ChatColor.translateAlternateColorCodes(
-                                    '&',
-                                    "&6AK-47 ( " + (ammo - 1) + "/ " + max + " )"
-                                )
-                            )
+                        val max =
+                            CustomItemManager.keys["$name.max"]?.let { container.get(it, PersistentDataType.INTEGER) }!!
+                        weapon.itemMeta = weaponMeta
+                        e.player.sendActionBar(
+                            LegacyComponentSerializer.legacyAmpersand()
+                                .deserialize("&6AK-47 ( " + (ammo - 1) + "/ " + max + " )")
                         )
                     }
                 } else if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
-                    arrow.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    arrow.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     arrow.shooter = player
                     arrow.damage = 50.0
                     val a1 = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     a1.velocity = arrow.velocity.rotateAroundY(Math.toRadians(5.0)).multiply(5)
-                    a1.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    a1.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     a1.shooter = player
                     a1.damage = 50.0
                     val a2 = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     a2.velocity = arrow.velocity.rotateAroundY(Math.toRadians(-5.0)).multiply(5)
-                    a2.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    a2.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     a2.shooter = player
                     a2.damage = 50.0
                     e.isCancelled = true
@@ -121,17 +121,17 @@ class CustomItemEvents : Listener {
                 if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
-                    arrow.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    arrow.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     arrow.shooter = player
                     arrow.damage = 50.0
                     val a1 = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     a1.velocity = arrow.velocity.rotateAroundY(Math.toRadians(5.0)).multiply(5)
-                    a1.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    a1.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     a1.shooter = player
                     a1.damage = 50.0
                     val a2 = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     a2.velocity = arrow.velocity.rotateAroundY(Math.toRadians(-5.0)).multiply(5)
-                    a2.pickupStatus = Arrow.PickupStatus.DISALLOWED
+                    a2.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     a2.shooter = player
                     a2.damage = 50.0
                     e.isCancelled = true
@@ -150,8 +150,8 @@ class CustomItemEvents : Listener {
     fun onEntityShoot(e: EntityShootBowEvent) {
         if (e.projectile is Arrow) {
             if (e.entity is Player) {
-                if (player.getInventory().getItemInMainHand().getItemMeta() != null) {
-                    val name: String = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()
+                if ((e.entity as Player).inventory.itemInMainHand.itemMeta != null) {
+                    val name: String = (e.entity as Player).inventory.itemInMainHand.itemMeta.getDisplayName()
                     if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
                         e.isCancelled = true
                     } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
@@ -165,12 +165,11 @@ class CustomItemEvents : Listener {
     @EventHandler
     fun onProjectileHit(e: ProjectileHitEvent) {
         if (e.entity.shooter is Player) {
-            if (shooter.getInventory().getItemInMainHand().getItemMeta() != null) {
-                val name: String = shooter.getInventory().getItemInMainHand().getItemMeta().getDisplayName()
+            if ((e.entity.shooter as Player).inventory.itemInMainHand.itemMeta != null) {
+                val name: String = (e.entity.shooter as Player).inventory.itemInMainHand.itemMeta.getDisplayName()
                 if (name.equals(Rarity.LEGENDARY.color + "Frag Grenade", ignoreCase = true)) {
                     if (e.hitBlock == null) {
                         val l = e.hitEntity!!.location
-                        e.entity.shooter = shooter
                         e.hitEntity!!.world.createExplosion(l.x, l.y, l.z, 100f, false, false)
                     } else if (e.hitEntity == null) {
                         val l = e.hitBlock!!.location
@@ -179,8 +178,7 @@ class CustomItemEvents : Listener {
                 } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
                     val arrow = e.entity as Arrow
                     val al = arrow.location
-                    arrow.shooter = shooter
-                    shooter.getWorld().createExplosion(al, 100f, false, false)
+                    (arrow.shooter as Player).world.createExplosion(al, 100f, false, false)
                 }
             }
         }
@@ -194,13 +192,18 @@ class CustomItemEvents : Listener {
     }
 
     @EventHandler
-    fun Projectile(e: ProjectileLaunchEvent) {
+    fun projectile(e: ProjectileLaunchEvent) {
         if (e.entity.shooter is Player) {
-            if (player.getInventory().getItemInMainHand().getItemMeta() != null) {
-                val name: String = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()
-                if (name.equals(Rarity.LEGENDARY.color + "Frag Grenade", ignoreCase = true)) {
-                    val s = e.entity as Egg
-                    s.velocity = player.getLocation().getDirection().multiply(10)
+            if ((e.entity.shooter as Player).inventory.itemInMainHand.itemMeta != null) {
+                val name = (e.entity.shooter as Player).inventory.itemInMainHand.itemMeta.displayName()
+                if (name != null) {
+                    if (name == LegacyComponentSerializer.legacyAmpersand()
+                            .deserialize(Rarity.LEGENDARY.color + "Frag Grenade")
+                    ) {
+                        val s = e.entity as Egg
+                        s.velocity = (e.entity.shooter as Player).location.direction.multiply(10)
+                    }
+
                 }
             }
         }
@@ -227,43 +230,50 @@ class CustomItemEvents : Listener {
     @EventHandler
     fun onDamage(e: EntityDamageByEntityEvent) {
         if (e.entity is Player) {
-            //            if ((player.getHealth() - e.getDamage()) <= 0) {
-//                e.setCancelled(true);
-//                Location loc = player.getWorld().getBlockAt(-3, 23, -3).getLocation();
-//                player.teleport(loc);
-//                for (Player p : Bukkit.getOnlinePlayers()) {
-//                    p.sendMessage(e.getDamager() instanceof Player
-//                            ? ChatColor.RED + player.getName() + " has been killed by " + e.getDamager().getName()
-//                            : ChatColor.RED + player.getName() + " died");
-//                    p.hidePlayer(player);
-//                }
-//                new BukkitRunnable() {
-//                    @Override
-//                    public void run() {
-//                        for (Player p : Bukkit.getOnlinePlayers()) {
-//                            p.showPlayer(player);
-//                        }
-//                        player.setHealth(20);
-//                        player.teleport(generateRandomCoord(9, Bukkit.getWorld("world")));
-//                    }
-//                }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie.class), 100L);
-//                countDown(player, new int[]{5});
-//            }
+            val player = e.entity as Player
+            if ((player.health - e.damage) <= 0) {
+                e.isCancelled = true
+                val loc = player.world.getBlockAt(-3, 23, -3).location
+                player.teleport(loc)
+                for (p in Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(
+                        if (e.damager is Player) ChatColor.RED.toString() + player.name + " has been killed by " + e.damager.name
+                        else ChatColor.RED.toString() + player.name + " died"
+                    )
+                    p.hidePlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, player)
+                }
+                object : BukkitRunnable() {
+                    override fun run() {
+                        for (p in Bukkit.getOnlinePlayers()) {
+                            p.showPlayer(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, player)
+                        }
+                        player.health = 20.0
+                        player.teleport(DamageEffectEvents.generateRandomCoord(9, Bukkit.getWorld("world")))
+                    }
+                }.runTaskLater(NullValkyrie.getPlugin(NullValkyrie::class.java)!!, 100L)
+                countDown(player, intArrayOf(5))
+            }
         }
     }
 
     private var taskID = 0
-    fun countDown(player: Player, a: IntArray) {
+    private fun countDown(player: Player, a: IntArray) {
         taskID = Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(
             NullValkyrie.getPlugin(
                 NullValkyrie::class.java
             )!!, {
-                player.sendTitle(
-                    ChatColor.RED.toString() + "YOU DIED!",
-                    ChatColor.GREEN.toString() + "You will revive in " + a[0] + " seconds",
-                    0,
-                    20,
-                    0
+                player.showTitle(
+                    Title.title(
+                        Component.text().append(Component.text().content("YOU DIED!").color(NamedTextColor.RED).build())
+                            .build(), Component.text().append(
+                            Component.text().content("You will revive in \" + a[0] + \" seconds")
+                                .color(NamedTextColor.GREEN).build()
+                        ).build(), Title.Times.times(
+                            java.time.Duration.ofSeconds(0),
+                            java.time.Duration.ofSeconds(1),
+                            java.time.Duration.ofSeconds(0)
+                        )
+                    )
                 )
                 a[0]--
                 if (a[0] == 0) {
@@ -274,6 +284,7 @@ class CustomItemEvents : Listener {
     }
 
     private val villagerlist: MutableMap<UUID, Merchant> = HashMap()
+
     @EventHandler
     fun onClick(e: PlayerInteractEntityEvent) {
         val p = e.player
@@ -291,7 +302,7 @@ class CustomItemEvents : Listener {
             val tntStick = MerchantRecipe(CustomItemManager.produceItem("Terminator"), 10)
             tntStick.addIngredient(CustomItemManager.produceItem("Widow Sword"))
             recipes.add(tntStick)
-            val merchant = Bukkit.createMerchant("Exchange here")
+            val merchant = Bukkit.createMerchant(Component.text().content("Exchange here").build())
             merchant.recipes = recipes
             villagerlist[villager.uniqueId] = merchant
             p.spawnParticle(Particle.END_ROD, loc, 30, 0.0, 1.0, 0.0, 0.2)
@@ -306,6 +317,7 @@ class CustomItemEvents : Listener {
 
     private val blockStages = HashMap<Location, Int>()
     private val miningCooldown = HashMap<UUID, Long>()
+
     @EventHandler
     fun onAnimationEvent(e: PlayerAnimationEvent) { //Material blockType, int mineInterval, Pickaxe x
         val player = e.player
