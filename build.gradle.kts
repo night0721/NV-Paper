@@ -10,7 +10,7 @@ plugins {
 }
 // KT
 group = "me.night0721.nv"
-version = "1.0.12"
+version = "1.0.2"
 description = "Multipurpose plugin"
 
 java {
@@ -51,7 +51,7 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
     }
     reobfJar {
-        //outputJar.set(layout.buildDirectory.file("C:\\Users\\NK\\OneDrive\\Desktop\\.nky\\Coding\\Kotlin\\NVPaper\\run\\plugins\\NullValkyrie.jar"))
+        outputJar.set(layout.buildDirectory.file("C:\\Users\\NK\\OneDrive\\Desktop\\.nky\\Coding\\Kotlin\\NVPaper\\run\\plugins\\NullValkyrie.jar"))
     }
 }
 bukkit {

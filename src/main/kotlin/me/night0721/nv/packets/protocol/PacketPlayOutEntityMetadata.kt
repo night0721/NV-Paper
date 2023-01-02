@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 
-class PacketPlayOutEntityMetadata(player: Player?, entity: Entity?, entityData: SynchedEntityData?) : Packet {
+class PacketPlayOutEntityMetadata(player: Player?, entity: Entity?, entityData: SynchedEntityData) : Packet {
     init {
         (player as CraftPlayer?)!!.handle.connection.send(
             ClientboundSetEntityDataPacket(
