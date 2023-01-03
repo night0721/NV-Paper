@@ -175,7 +175,7 @@ class InventoryListener : Listener {
                                 val lore = if (meta.lore().isNullOrEmpty()) ArrayList() else meta.lore()!!
                                 lore.add(Component.text().content("").build())
                                 lore.add(LegacyComponentSerializer.legacySection().deserialize("&bChance: " + randomCollection.getChance(s1) + "%"))
-                                lore.add(LegacyComponentSerializer.legacySection().deserialize(Items.getByName(s1)!!.rarity.display))
+                                lore.add(Items.getByName(s1)!!.rarity.display)
                                 meta.lore(lore)
                                 item.itemMeta = meta
                                 GUIManager.GUI!!.setItem(Items.getByName(s1)!!.slot, item)
@@ -184,7 +184,7 @@ class InventoryListener : Listener {
                             val item = ItemStack(it.material, 1)
                             val meta = item.itemMeta ?: return
                             meta.displayName(Component.text().content(it.name).color(NamedTextColor.GOLD).build())
-                            meta.lore(listOf(LegacyComponentSerializer.legacySection().deserialize(it.rarity.display)))
+                            meta.lore(listOf(it.rarity.display))
                             item.itemMeta = meta
                             player.inventory.addItem(item)
                         } else player.closeInventory()

@@ -9,7 +9,6 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
-import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -21,25 +20,25 @@ class DamageEffectEvents : Listener {
     val world = Bukkit.getWorld("world")
     val indicators: MutableMap<Entity, Int> = HashMap()
     private val formatter = DecimalFormat("#")
+
     @EventHandler
     fun onDamage(e: EntityDamageByEntityEvent) {
         val damage = e.finalDamage
-        if (e.entity is Zombie) {
-            val loc = e.entity.location.clone().add(randomOffset, 1.0, randomOffset)
-            assert(world != null)
-            world!!.spawn(loc, ArmorStand::class.java) { armorStand: ArmorStand ->
-                armorStand.isMarker = true
-                armorStand.isVisible = false
-                armorStand.setGravity(false)
-                armorStand.isSmall = true
-                armorStand.isCustomNameVisible = true
-                armorStand.customName(
-                    Component.text().content(formatter.format(damage).toString()).color(NamedTextColor.RED).decoration(
-                        TextDecoration.BOLD, true).build())
-                indicators[armorStand] = 30
-            }
-            removeStands()
+        val loc = e.entity.location.clone().add(randomOffset, 1.0, randomOffset)
+        world!!.spawn(loc, ArmorStand::class.java) { armorStand: ArmorStand ->
+            armorStand.isMarker = true
+            armorStand.isVisible = false
+            armorStand.setGravity(false)
+            armorStand.isSmall = true
+            armorStand.isCustomNameVisible = true
+            armorStand.customName(
+                Component.text().content(formatter.format(damage).toString()).color(NamedTextColor.RED).decoration(
+                    TextDecoration.BOLD, true
+                ).build()
+            )
+            indicators[armorStand] = 30
         }
+        removeStands()
     }
 
     private fun removeStands() {
@@ -76,13 +75,9 @@ class DamageEffectEvents : Listener {
             return random
         }
 
-
-
-
-
+    @Suppress("unused")
     fun generateRandomCoordIsSpawnable(size: Int): Location {
         while (true) {
-            assert(world != null)
             val coord = generateRandomCoord(size, world)
             val spawnable = isSpawnable(coord)
             if (spawnable) {
@@ -97,6 +92,7 @@ class DamageEffectEvents : Listener {
             if (Math.random() > 0.5) random *= -1
             return random
         }
+
         fun generateRandomCoord(size: Int, world: World?): Location {
             val ranX = getRandomWithNeg(size)
             val ranZ = getRandomWithNeg(size)
