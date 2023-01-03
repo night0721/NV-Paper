@@ -5,6 +5,7 @@ import org.bson.Document
 import org.bukkit.Material
 
 class CustomWeaponsDataManager {
+    @Suppress("unchecked_cast")
     fun getWeapon(itemName: String?): HashMap<String, Any?> {
         val item = HashMap<String, Any?>()
         DatabaseManager().customweapons.find(Filters.eq("Name", itemName)).cursor().use { cursor ->
@@ -62,6 +63,7 @@ class CustomWeaponsDataManager {
     }
 
     companion object {
+        @Suppress("unchecked_cast")
         val weapons: HashMap<String, Any>
             get() {
                 val list = HashMap<String, Any>()
