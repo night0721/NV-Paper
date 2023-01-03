@@ -20,5 +20,7 @@ class CommandManager {
         LuckyDrawCommand()
         NPCCommand()
         TechnobladeCommand()
+        PetCommand()
+        ItemCommand()
     }
 }

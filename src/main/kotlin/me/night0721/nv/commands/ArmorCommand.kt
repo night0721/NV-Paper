@@ -1,6 +1,7 @@
 package me.night0721.nv.commands
 
-import net.md_5.bungee.api.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
@@ -15,28 +16,28 @@ class ArmorCommand : Command("armor", arrayOf(), "Give you a set of armor", "") 
         if (sender is Player) {
             val helmet = ItemStack(Material.LEATHER_HELMET)
             val helmetdata = helmet.itemMeta as LeatherArmorMeta
-            helmetdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Helmet")
+            helmetdata.displayName(Component.text().content("Angeles Helmet").color(TextColor.fromHexString("#ff23ff")).build())
             helmetdata.setColor(Color.fromRGB(2, 2, 58))
             helmetdata.isUnbreakable = true
             helmet.itemMeta = helmetdata
             sender.inventory.addItem(helmet)
             val cp = ItemStack(Material.LEATHER_CHESTPLATE)
             val cpdata = cp.itemMeta as LeatherArmorMeta
-            cpdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Chestplate")
+            cpdata.displayName(Component.text().content("Angeles Chestplate").color(TextColor.fromHexString("#ff23ff")).build())
             cpdata.setColor(Color.fromRGB(2, 2, 58))
             cpdata.isUnbreakable = true
             cp.itemMeta = cpdata
             sender.inventory.addItem(cp)
             val leg = ItemStack(Material.LEATHER_LEGGINGS)
             val legdata = leg.itemMeta as LeatherArmorMeta
-            legdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Leggings")
+            legdata.displayName(Component.text().content("Angeles Leggings").color(TextColor.fromHexString("#ff23ff")).build())
             legdata.setColor(Color.fromRGB(2, 2, 58))
             legdata.isUnbreakable = true
             leg.itemMeta = legdata
             sender.inventory.addItem(leg)
             val boot = ItemStack(Material.LEATHER_BOOTS)
             val bootdata = boot.itemMeta as LeatherArmorMeta
-            bootdata.setDisplayName(ChatColor.of("#ff23ff").toString() + "Angeles Boots")
+            bootdata.displayName(Component.text().content("Angeles Boots").color(TextColor.fromHexString("#ff23ff")).build())
             bootdata.setColor(Color.fromRGB(2, 2, 58))
             bootdata.isUnbreakable = true
             boot.itemMeta = legdata
