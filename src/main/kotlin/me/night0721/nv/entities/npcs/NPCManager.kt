@@ -37,7 +37,7 @@ object NPCManager {
     fun createNPC(player: Player, name: String?) { // name must be less than 16 characters including color codes
         val sp = (player as CraftPlayer).handle
         val server = sp.server
-        val level = (player.getLocation().world as CraftWorld).handle
+        val level = (player.location.world as CraftWorld).handle
         val gameProfile = GameProfile(UUID.randomUUID(), color(name))
         val skin = getSkin(player)
         gameProfile.properties.put("textures", Property("textures", skin[0], skin[1]))
@@ -130,7 +130,7 @@ object NPCManager {
                 (npc["yaw"] as Int).toFloat(),
                 (npc["pitch"] as Int).toFloat()
             )
-            val gameProfile = GameProfile(UUID.randomUUID(), color(npc["name"] as String?))
+            val gameProfile = GameProfile(UUID.randomUUID(), color(npc["Name"] as String?))
             gameProfile.properties.put(
                 "textures",
                 Property("textures", npc["texture"] as String?, npc["signature"] as String?)

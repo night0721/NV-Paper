@@ -45,25 +45,7 @@ object NPCDataManager {
                         npc[key] = document[key]!!
                     }
                 }
-//                val name = document.getString("Name")
-//                val x = document.getDouble("x")
-//                val y = document.getDouble("y")
-//                val z = document.getDouble("z")
-//                val pitch = document.getInteger("pitch")
-//                val yaw = document.getInteger("yaw")
-//                val world = document.getString("world")
-//                val texture = document.getString("texture")
-//                val signature = document.getString("signature")
-//                npc["name"] = name
-//                npc["x"] = x
-//                npc["y"] = y
-//                npc["z"] = z
-//                npc["pitch"] = pitch
-//                npc["yaw"] = yaw
-//                npc["world"] = world
-//                npc["texture"] = texture
-//                npc["signature"] = signature
-//                npcList.add(npc)
+                npcList.add(npc)
             }
         }
         NPCManager.reloadNPC(npcList)
