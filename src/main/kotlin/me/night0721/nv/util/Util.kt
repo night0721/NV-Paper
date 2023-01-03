@@ -53,4 +53,15 @@ object Util {
     fun warn(string: String?) {
         NullValkyrie.getPlugin().logger.warning(color(string))
     }
+    @JvmStatic
+    fun colorOf(string: String) : String {
+        val magic = StringBuilder("§x")
+        val var3 = string.substring(1).toCharArray()
+        val var4 = var3.size
+        for (var5 in 0 until var4) {
+            val c = var3[var5]
+            magic.append('§').append(c)
+        }
+        return magic.toString()
+    }
 }

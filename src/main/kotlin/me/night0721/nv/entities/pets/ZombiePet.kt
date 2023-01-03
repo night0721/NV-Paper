@@ -1,6 +1,7 @@
 package me.night0721.nv.entities.pets
 
-import net.md_5.bungee.api.ChatColor
+import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Util
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -23,7 +24,7 @@ class ZombiePet(location: Location, player: Player) : Zombie(EntityType.ZOMBIE, 
             location.z
         ) // https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html setPos
         this.customName =
-            Component.nullToEmpty(ChatColor.DARK_PURPLE.toString() + player.name + "'s Zombie") //https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html setCustomName
+            Component.nullToEmpty(Util.colorOf(Rarity.GRAND.hex) + player.name + "'s Zombie") //https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html setCustomName
         this.isCustomNameVisible =
             true // https://nms.screamingsandals.org/1.19.2/net/minecraft/world/entity/Entity.html setCustomNameVisible
         this.setTarget(

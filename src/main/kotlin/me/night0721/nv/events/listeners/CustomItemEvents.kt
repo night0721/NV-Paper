@@ -5,13 +5,19 @@ import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.entities.miners.Rarity
 import me.night0721.nv.game.packets.protocol.PacketPlayOutBlockBreakAnimation
+import me.night0721.nv.util.Util
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.kyori.adventure.title.Title
 import org.bukkit.*
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftSnowball
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftTippedArrow
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.*
@@ -30,25 +36,20 @@ class CustomItemEvents : Listener {
             val sb = e.damager as Snowball
             val pl = sb.shooter as Player?
             if (pl!!.inventory.itemInMainHand.itemMeta != null) {
-                val name = pl.inventory.itemInMainHand.itemMeta.displayName
-                if (name.equals(Rarity.ULTRA.color + "Snow Gun", ignoreCase = true)) {
+                val name = pl.inventory.itemInMainHand.itemMeta.displayName()
+                if (name == Component.text().content("Snow Gun").color(Rarity.ULTRA.color).build()) {
                     (e.damager as Snowball).shooter = pl.player
                     e.damage = 2000.0
-                } else if (name.equals("AA-12", ignoreCase = true)) {
-                    e.damage = 7.0
-                } else {
-                    e.damage = 0.0
                 }
             }
         }
     }
-
     @EventHandler
     fun onPlayerFish(e: PlayerFishEvent) {
         val player = e.player
         if (player.inventory.itemInMainHand.itemMeta != null) {
-            val name = player.inventory.itemInMainHand.itemMeta.displayName
-            if (name.equals(Rarity.RARE.color + "Grappling Hook", ignoreCase = true)) {
+            val name = player.inventory.itemInMainHand.itemMeta.displayName()
+            if (name == Component.text().content("Grappling Hook").color(Rarity.RARE.color).build()) {
                 if (e.state == PlayerFishEvent.State.REEL_IN) {
                     val change = e.hook.location.subtract(player.location)
                     player.velocity = change.toVector().multiply(0.4)
@@ -61,9 +62,9 @@ class CustomItemEvents : Listener {
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
         if (player.inventory.itemInMainHand.itemMeta != null) {
-            val name = player.inventory.itemInMainHand.itemMeta.displayName
+            val name = player.inventory.itemInMainHand.itemMeta.displayName()
             if (e.action == Action.RIGHT_CLICK_AIR || e.action == Action.RIGHT_CLICK_BLOCK) {
-                if (name.equals(Rarity.GRAND.color + "Teleport Door", ignoreCase = true)) {
+                if (name == Component.text().content("Teleport Door").color(Rarity.GRAND.color).build()) {
                     val block = player.getTargetBlock(null, 12)
                     val l = block.location
                     l.add(0.0, 1.0, 0.0)
@@ -73,27 +74,28 @@ class CustomItemEvents : Listener {
                     l.pitch = pitch
                     player.teleport(l)
                     player.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 10f, 10f)
-                } else if (name.equals(Rarity.ULTRA.color + "Snow Gun", ignoreCase = true)) {
+                } else if (name == Component.text().content("Snow Gun").color(Rarity.ULTRA.color).build()) {
                     val s = player.launchProjectile(Snowball::class.java, player.location.direction)
+                    val namecode = Util.colorOf((name as TextComponent).color()?.asHexString()!!) + name.content()
                     s.velocity = player.location.direction.multiply(10)
                     val weapon = player.inventory.itemInMainHand
                     val weaponMeta = weapon.itemMeta
                     if (weaponMeta != null) {
                         val container = weaponMeta.persistentDataContainer
-                        val ammoKey = CustomItemManager.keys["$name.ammo"]
+                        val ammoKey = CustomItemManager.keys["$namecode.ammo"]
                         val ammo = if (container.get(ammoKey!!, PersistentDataType.INTEGER) != null) container.get(
                             ammoKey, PersistentDataType.INTEGER
                         )!! else 0
                         container.set(ammoKey, PersistentDataType.INTEGER, ammo - 1)
                         val max =
-                            CustomItemManager.keys["$name.max"]?.let { container.get(it, PersistentDataType.INTEGER) }!!
+                            CustomItemManager.keys["$namecode.max"]?.let { container.get(it, PersistentDataType.INTEGER) }!!
                         weapon.itemMeta = weaponMeta
                         e.player.sendActionBar(
                             LegacyComponentSerializer.legacyAmpersand()
                                 .deserialize("&6AK-47 ( " + (ammo - 1) + "/ " + max + " )")
                         )
                     }
-                } else if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
+                } else if (name == Component.text().content("Terminator").color(Rarity.MYTHIC.color).build()) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
                     arrow.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
@@ -110,7 +112,7 @@ class CustomItemEvents : Listener {
                     a2.shooter = player
                     a2.damage = 50.0
                     e.isCancelled = true
-                } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
+                } else if (name == Component.text().content("Explosive Bow").color(Rarity.LEGENDARY.color).build()) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
                     arrow.shooter = player
@@ -118,7 +120,7 @@ class CustomItemEvents : Listener {
                     e.isCancelled = true
                 }
             } else if (e.action == Action.LEFT_CLICK_AIR || e.action == Action.LEFT_CLICK_BLOCK) {
-                if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
+                if (name == Component.text().content("Terminator").color(Rarity.MYTHIC.color).build()) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
                     arrow.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
@@ -135,7 +137,7 @@ class CustomItemEvents : Listener {
                     a2.shooter = player
                     a2.damage = 50.0
                     e.isCancelled = true
-                } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
+                } else if (name == Component.text().content("Explosive Bow").color(Rarity.LEGENDARY.color).build()) {
                     val arrow = player.launchProjectile(Arrow::class.java, player.eyeLocation.direction)
                     arrow.velocity = arrow.velocity.multiply(5)
                     arrow.shooter = player
@@ -151,10 +153,10 @@ class CustomItemEvents : Listener {
         if (e.projectile is Arrow) {
             if (e.entity is Player) {
                 if ((e.entity as Player).inventory.itemInMainHand.itemMeta != null) {
-                    val name: String = (e.entity as Player).inventory.itemInMainHand.itemMeta.getDisplayName()
-                    if (name.equals(Rarity.MYTHIC.color + "Terminator", ignoreCase = true)) {
+                    val name = (e.entity as Player).inventory.itemInMainHand.itemMeta.displayName()
+                    if (name == Component.text().content("Terminator").color(Rarity.MYTHIC.color).build()) {
                         e.isCancelled = true
-                    } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
+                    } else if (name == Component.text().content("Explosive Bow").color(Rarity.LEGENDARY.color).build()) {
                         e.isCancelled = true
                     }
                 }
@@ -166,8 +168,8 @@ class CustomItemEvents : Listener {
     fun onProjectileHit(e: ProjectileHitEvent) {
         if (e.entity.shooter is Player) {
             if ((e.entity.shooter as Player).inventory.itemInMainHand.itemMeta != null) {
-                val name: String = (e.entity.shooter as Player).inventory.itemInMainHand.itemMeta.getDisplayName()
-                if (name.equals(Rarity.LEGENDARY.color + "Frag Grenade", ignoreCase = true)) {
+                val name = (e.entity.shooter as Player).inventory.itemInMainHand.itemMeta.displayName()
+                if (name == Component.text().content("Frag Grenade").color(Rarity.LEGENDARY.color).build()) {
                     if (e.hitBlock == null) {
                         val l = e.hitEntity!!.location
                         e.hitEntity!!.world.createExplosion(l.x, l.y, l.z, 100f, false, false)
@@ -175,7 +177,7 @@ class CustomItemEvents : Listener {
                         val l = e.hitBlock!!.location
                         e.hitBlock!!.world.createExplosion(l.x, l.y, l.z, 100f, false, false)
                     }
-                } else if (name.equals(Rarity.LEGENDARY.color + "Explosive Bow", ignoreCase = true)) {
+                } else if (name == Component.text().content("Explosive Bow").color(Rarity.LEGENDARY.color).build()) {
                     val arrow = e.entity as Arrow
                     val al = arrow.location
                     (arrow.shooter as Player).world.createExplosion(al, 100f, false, false)
@@ -197,8 +199,7 @@ class CustomItemEvents : Listener {
             if ((e.entity.shooter as Player).inventory.itemInMainHand.itemMeta != null) {
                 val name = (e.entity.shooter as Player).inventory.itemInMainHand.itemMeta.displayName()
                 if (name != null) {
-                    if (name == LegacyComponentSerializer.legacyAmpersand()
-                            .deserialize(Rarity.LEGENDARY.color + "Frag Grenade")
+                    if (name == Component.text().content("Frag Grenade").color(Rarity.LEGENDARY.color).build()
                     ) {
                         val s = e.entity as Egg
                         s.velocity = (e.entity.shooter as Player).location.direction.multiply(10)
@@ -216,28 +217,33 @@ class CustomItemEvents : Listener {
         val z = e.blockClicked.z + e.blockFace.modZ
         val player = e.player
         if (player.inventory.itemInMainHand.itemMeta != null) {
-            val name = player.inventory.itemInMainHand.itemMeta.displayName
-            if (name.equals(Rarity.EPIC.color + "Infinite Water Bucket", ignoreCase = true)) {
+            val name = player.inventory.itemInMainHand.itemMeta.displayName()
+            if (name == Component.text().content("Infinite Water Bucket").color(Rarity.EPIC.color).build()) {
                 e.player.world.getBlockAt(x, y, z).type = Material.WATER
                 e.isCancelled = true
-            } else if (name.equals(Rarity.EPIC.color + "Infinite Lava Bucket", ignoreCase = true)) {
+            } else if (name == Component.text().content("Infinite Lava Bucket").color(Rarity.EPIC.color).build()) {
                 e.player.world.getBlockAt(x, y, z).type = Material.LAVA
                 e.isCancelled = true
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun onDamage(e: EntityDamageByEntityEvent) {
-        if (e.entity is Player) {
+        if (e.entity.type == EntityType.PLAYER) {
+            var damager: CraftPlayer? = null
+            if (e.damager.type == EntityType.SNOWBALL && (e.damager as CraftSnowball).shooter is CraftPlayer)
+                damager = (e.damager as CraftSnowball).shooter as CraftPlayer
+            if (e.damager.type == EntityType.ARROW && (e.damager as CraftTippedArrow).shooter is CraftPlayer)
+                damager = (e.damager as CraftTippedArrow).shooter as CraftPlayer
             val player = e.entity as Player
             if ((player.health - e.damage) <= 0) {
                 e.isCancelled = true
-                val loc = player.world.getBlockAt(-3, 23, -3).location
+                val loc = Location(Bukkit.getWorld("world"), 139.5, 133.0, 635.5)
                 player.teleport(loc)
                 for (p in Bukkit.getOnlinePlayers()) {
                     p.sendMessage(
-                        if (e.damager is Player) ChatColor.RED.toString() + player.name + " has been killed by " + e.damager.name
+                        if (damager != null) ChatColor.RED.toString() + player.name + " has been killed by " + damager.name
                         else ChatColor.RED.toString() + player.name + " died"
                     )
                     p.hidePlayer(NullValkyrie.getPlugin(), player)
@@ -248,7 +254,6 @@ class CustomItemEvents : Listener {
                             p.showPlayer(NullValkyrie.getPlugin(), player)
                         }
                         player.health = 20.0
-                        player.teleport(DamageEffectEvents.generateRandomCoord(9, Bukkit.getWorld("world")))
                     }
                 }.runTaskLater(NullValkyrie.getPlugin(), 100L)
                 countDown(player, intArrayOf(5))
@@ -265,7 +270,7 @@ class CustomItemEvents : Listener {
                     Title.title(
                         Component.text().append(Component.text().content("YOU DIED!").color(NamedTextColor.RED).build())
                             .build(), Component.text().append(
-                            Component.text().content("You will revive in \" + a[0] + \" seconds")
+                            Component.text().content("You will revive in " + a[0] + " seconds")
                                 .color(NamedTextColor.GREEN).build()
                         ).build(), Title.Times.times(
                             java.time.Duration.ofSeconds(0),

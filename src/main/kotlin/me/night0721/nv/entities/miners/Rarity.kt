@@ -1,37 +1,52 @@
 package me.night0721.nv.entities.miners
 
-import net.md_5.bungee.api.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 
-enum class Rarity(val display: String, val color: String) {
+enum class Rarity(val display: TextComponent, val color: TextColor, val hex: String) {
+
     COMMON(
-        org.bukkit.ChatColor.WHITE.toString() + org.bukkit.ChatColor.BOLD + "COMMON",
-        org.bukkit.ChatColor.WHITE.toString()
+        Component.text().content("COMMON").color(TextColor.fromHexString("#ffffff"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#ffffff")!!, "#ffffff"
     ),
     UNCOMMON(
-        ChatColor.of("#31ff09").toString() + org.bukkit.ChatColor.BOLD + "UNCOMMON", ChatColor.of("#31ff09").toString()
+        Component.text().content("UNCOMMON").color(TextColor.fromHexString("#31ff09"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#31ff09")!!, "#31ff09"
     ),
     RARE(
-        ChatColor.of("#2f57ae").toString() + org.bukkit.ChatColor.BOLD + "RARE", ChatColor.of("#2f57ae").toString()
+        Component.text().content("RARE").color(TextColor.fromHexString("#2f57ae")).decoration(TextDecoration.BOLD, true)
+            .build(), TextColor.fromHexString("#2f57ae")!!, "#2f57ae"
     ),
     EPIC(
-        ChatColor.of("#b201b2").toString() + org.bukkit.ChatColor.BOLD + "EPIC", ChatColor.of("#b201b2").toString()
+        Component.text().content("EPIC").color(TextColor.fromHexString("#b201b2")).decoration(TextDecoration.BOLD, true)
+            .build(), TextColor.fromHexString("#b201b2")!!, "#b201b2"
+
     ),
     LEGENDARY(
-        ChatColor.of("#ffa21b").toString() + org.bukkit.ChatColor.BOLD + "LEGENDARY", ChatColor.of("#ffa21b").toString()
+        Component.text().content("LEGENDARY").color(TextColor.fromHexString("#ffa21b"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#ffa21b")!!, "#ffa21b"
+
     ),
     MYTHIC(
-        ChatColor.of("#ff23ff").toString() + org.bukkit.ChatColor.BOLD + "MYTHIC", ChatColor.of("#ff23ff").toString()
+        Component.text().content("MYTHIC").color(TextColor.fromHexString("#ff23ff"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#ff23ff")!!, "#ff23ff"
+
     ),
     ULTRA(
-        org.bukkit.ChatColor.RED.toString() + org.bukkit.ChatColor.BOLD + "ULTRA",
-        org.bukkit.ChatColor.RED.toString()
+        Component.text().content("ULTRA").color(TextColor.fromHexString("#ea8888"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#ea8888")!!, "#ea8888"
     ),
     GRAND(
-        ChatColor.of("#00fdff").toString() + org.bukkit.ChatColor.BOLD + "GRAND", ChatColor.of("#00fdff").toString()
+        Component.text().content("GRAND").color(TextColor.fromHexString("#00fdff"))
+            .decoration(TextDecoration.BOLD, true).build(), TextColor.fromHexString("#00fdff")!!, "#00fdff"
+
     );
 
     companion object {
         fun getRarity(str: String?): Rarity {
+
             return when (str) {
                 "UNCOMMON" -> UNCOMMON
                 "RARE" -> RARE

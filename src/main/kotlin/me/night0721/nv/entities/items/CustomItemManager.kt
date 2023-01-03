@@ -3,8 +3,10 @@ package me.night0721.nv.entities.items
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.CustomWeaponsDataManager
 import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Util
 import me.night0721.nv.util.Util.capitalize
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -15,12 +17,13 @@ import java.util.*
 
 object CustomItemManager {
     val keys = HashMap<String?, NamespacedKey?>()
+
     @Suppress("unchecked_cast")
     fun produceItem(itemName: String?): ItemStack {
         val weapon = CustomWeaponsDataManager().getWeapon(itemName)
         val item = ItemStack((weapon["Material"] as Material?)!!)
-        val propertiesList: MutableList<String> = ArrayList()
-        val itemAbility: MutableList<String> = ArrayList()
+        val propertiesList: MutableList<Component> = ArrayList()
+        val itemAbility: MutableList<Component> = ArrayList()
         val enchants = weapon["Enchants"] as HashMap<String, Any>?
         val attributes = weapon["Attributes"] as HashMap<String, Any>?
         for (enchant in enchants!!.keys) Objects.requireNonNull(
@@ -36,25 +39,26 @@ object CustomItemManager {
         val ability = lore!!["Ability"] as HashMap<String, Any?>?
         val properties = lore["Properties"] as HashMap<String, Any>?
         for (p in properties!!.keys) if (properties[p] as Int > 0) propertiesList.add(
-            ChatColor.GRAY.toString() + capitalize(
-                p
-            ) + ": " + ChatColor.RED + "+" + properties[p]
+            Component.text().content(capitalize(p) + ": ").color(NamedTextColor.GRAY)
+                .append(Component.text().content("+" + properties[p]).color(NamedTextColor.RED).build()).build()
         )
         if (ability!!["Name"] != null) {
-            itemAbility.add(ChatColor.GOLD.toString() + "Item Ability: " + ability["Name"])
-            for (line in (ability["Details"] as List<String>?)!!) itemAbility.add(ChatColor.GRAY.toString() + line)
+            itemAbility.add(Component.text().content("Item Ability: " + ability["Name"]).color(NamedTextColor.GOLD).build())
+            for (line in (ability["Details"] as List<String>?)!!) itemAbility.add(Component.text().content(line).color(NamedTextColor.GRAY).build())
         }
         val itemMeta = item.itemMeta ?: return item
-        itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(Rarity.getRarity(weapon["Rarity"] as String?).color + weapon["Name"]))
+        itemMeta.displayName(
+            Component.text().content(weapon["Name"] as String).color(Rarity.getRarity(weapon["Rarity"] as String).color)
+                .build()
+        )
         itemMeta.isUnbreakable = true
         val loreList = ArrayList(propertiesList)
-        loreList.add("")
+        loreList.add(Component.text().content(" ").build())
         val enchantmentList = ArrayList<String>()
         for (enchantment in item.enchantments.keys) {
             val split = listOf(
-                *listOf(
-                    *enchantment.key.toString().split(":".toRegex()).dropLastWhile { it.isEmpty() }
-                        .toTypedArray())[1].split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                *listOf(*enchantment.key.toString().split(":".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray())[1].split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             )
             val builder = StringBuilder()
             for (strings in split) {
@@ -68,12 +72,12 @@ object CustomItemManager {
             }
             enchantmentList.add(builder.toString() + " " + item.getEnchantmentLevel(enchantment))
         }
-        loreList.add(ChatColor.BLUE.toString() + java.lang.String.join(", ", enchantmentList))
-        loreList.add("")
+        loreList.add(Component.text().content(java.lang.String.join(", ", enchantmentList)).color(NamedTextColor.BLUE).build())
+        loreList.add(Component.text().content(" ").build())
         loreList.addAll(itemAbility)
-        loreList.add("")
+        loreList.add(Component.text().content(" ").build())
         loreList.add(Rarity.getRarity(weapon["Rarity"] as String?).display)
-        itemMeta.lore = loreList
+        itemMeta.lore(loreList)
         for (attribute in attributes!!.keys) {
             if (attribute == "damage") {
                 val p = AttributeModifier(
@@ -100,7 +104,8 @@ object CustomItemManager {
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
             val key1 = NamespacedKey(NullValkyrie.getPlugin(), key)
-            keys[Rarity.getRarity(weapon["Rarity"] as String?).color + weapon["Name"] + "." + key] = key1
+            println(Util.colorOf(Rarity.getRarity(weapon["Rarity"] as String?).hex) + weapon["Name"] + "." + key)
+            keys[Util.colorOf(Rarity.getRarity(weapon["Rarity"] as String?).hex) + weapon["Name"] + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
         item.itemMeta = itemMeta
@@ -116,11 +121,7 @@ object CustomItemManager {
     }
 
     private fun setItemRecipe(
-        key: String?,
-        i: ItemStack?,
-        shapes: List<String>?,
-        ingredients: HashMap<Char, Material?>,
-        amount: Int
+        key: String?, i: ItemStack?, shapes: List<String>?, ingredients: HashMap<Char, Material?>, amount: Int
     ) {
         val nsk = NamespacedKey(NullValkyrie.getPlugin(), key!!.replace("\\s".toRegex(), ""))
         val recipe = ShapedRecipe(nsk, i!!)
