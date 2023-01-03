@@ -20,11 +20,14 @@ class LuckyDraw : GUIManager() {
             val item = ItemStack(it!!.material)
             val meta = item.itemMeta ?: return
             meta.displayName(Component.text().content(s1!!).color(NamedTextColor.GREEN).build())
-            meta.lore(listOf(
-                Component.text().content("").build(),
-                Component.text().content("§bChance:" + InventoryListener.randomCollection.getChance(s1) + "%").build(),
-                Component.text().content(it.rarity.display).build()
-            ))
+            meta.lore(
+                listOf(
+                    Component.text().content("").build(),
+                    Component.text().content("§bChance:" + InventoryListener.randomCollection.getChance(s1) + "%")
+                        .build(),
+                    it.rarity.display
+                )
+            )
             item.itemMeta = meta
             GUI!!.setItem(it.slot, item)
         }
