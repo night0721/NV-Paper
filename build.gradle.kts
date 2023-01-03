@@ -10,7 +10,7 @@ plugins {
 }
 // KT
 group = "me.night0721.nv"
-version = "1.2.10"
+version = "1.2.11"
 description = "Multipurpose plugin"
 
 java {
