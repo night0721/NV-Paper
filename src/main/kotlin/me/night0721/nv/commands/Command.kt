@@ -12,13 +12,14 @@ abstract class Command(command: String?, aliases: Array<String?>, description: S
     ) {
     init {
         this.aliases = listOf(*aliases)
-        setDescription(description!!)
+        this.description = description!!
         this.permission = permission
         try {
             val field = Bukkit.getServer().javaClass.getDeclaredField("commandMap")
             field.isAccessible = true
-            val map = field[Bukkit.getServer()] as CommandMap
-            map.register(command!!, this)
+            (field[Bukkit.getServer()] as CommandMap).also {
+                it.register(command!!, this)
+            }
         } catch (e: NoSuchFieldException) {
             e.printStackTrace()
         } catch (e: IllegalAccessException) {
