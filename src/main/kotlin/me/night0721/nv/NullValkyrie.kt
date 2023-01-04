@@ -5,17 +5,16 @@ import me.night0721.nv.database.DatabaseManager
 import me.night0721.nv.database.NPCDataManager
 import me.night0721.nv.discord.DiscordClientManager
 import me.night0721.nv.entities.miners.CryptoMiner
-import me.night0721.nv.events.listeners.CustomEvents
-import me.night0721.nv.events.listeners.CustomItemEvents
-import me.night0721.nv.events.listeners.DamageEffectEvents
-import me.night0721.nv.events.listeners.ServerEvents
+import me.night0721.nv.events.listeners.*
 import me.night0721.nv.game.tasks.AlwaysDayTask
+import me.night0721.nv.game.tasks.BodyRemover
 import me.night0721.nv.ui.inventory.InventoryListener
 import me.night0721.nv.ui.player.ScoreboardListener
 import me.night0721.nv.util.enchantments.EnchantmentManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+
 
 class NullValkyrie : JavaPlugin() {
     override fun onEnable() {
@@ -28,10 +27,12 @@ class NullValkyrie : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(CustomItemEvents(), this)
         Bukkit.getPluginManager().registerEvents(DamageEffectEvents(), this)
         Bukkit.getPluginManager().registerEvents(CustomEvents(), this)
+        Bukkit.getPluginManager().registerEvents(DeathListener(), this)
         DiscordClientManager()
         NPCDataManager.reloadNPC()
         CryptoMiner.reloadMiner()
         AlwaysDayTask().runTaskTimer(this, 0, 100)
+        BodyRemover().runTaskTimerAsynchronously(this, 20L, 20L)
     }
 
     companion object {
@@ -41,6 +42,7 @@ class NullValkyrie : JavaPlugin() {
         }
     }
 }
+// TODO: level system for miners
 // TODO: add comments to functions so docs can be generated
 // TODO: Add corpse body when player dies
 // TODO: vault to store item

@@ -4,10 +4,13 @@ import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import me.night0721.nv.NullValkyrie
+import me.night0721.nv.entities.corpses.Body
+import me.night0721.nv.entities.corpses.BodyManager
 import me.night0721.nv.entities.holograms.PerPlayerHologram
 import me.night0721.nv.entities.npcs.NPCManager
 import me.night0721.nv.events.custom.InteractHologramEvent
 import me.night0721.nv.events.custom.RightClickNPCEvent
+import me.night0721.nv.events.listeners.DeathListener.Companion.spitItems
 import me.night0721.nv.util.Util.getFieldValue
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
@@ -58,16 +61,27 @@ class PacketHandler(private val player: Player) : ChannelDuplexHandler() {
             val entityID = getFieldValue(packet, "a") as Int
             val sneak = getFieldValue(packet, "c") as Boolean
             Bukkit.getScheduler().scheduleSyncDelayedTask(NullValkyrie.getPlugin(), {
-                val stands: Array<ArmorStand?> = PerPlayerHologram.holograms[entityID]
-                    ?: return@scheduleSyncDelayedTask
-                Bukkit.getPluginManager().callEvent(
-                    InteractHologramEvent(
-                        player,
-                        stands[stands.size - 1]!!.bukkitEntity as org.bukkit.entity.ArmorStand
+                val stands: Array<ArmorStand?>? = PerPlayerHologram.holograms[entityID]
+                if (stands != null) {
+                    Bukkit.getPluginManager().callEvent(
+                        InteractHologramEvent(
+                            player,
+                            stands[stands.size - 1]!!.bukkitEntity as org.bukkit.entity.ArmorStand
+                        )
                     )
-                )
-                for (i in stands) {
-                    (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(i!!.id))
+                    for (i in stands) {
+                        (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(i!!.id))
+                    }
+                } else {
+                    val iterator = BodyManager.bodies.iterator()
+                    while (iterator.hasNext()) {
+                        val body: Body = iterator.next()
+                        if (body.armorStands.contains(entityID)) {
+                            spitItems(player, body)
+                            BodyManager.deleteNPC(body)
+                            iterator.remove()
+                        }
+                    }
                 }
             }, 0)
             val data = getFieldValue(pk, "b")

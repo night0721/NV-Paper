@@ -1,4 +1,4 @@
-package me.night0721.nv.entities.miners
+package me.night0721.nv.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent

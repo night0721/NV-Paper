@@ -2,7 +2,7 @@ package me.night0721.nv.entities.items
 
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.CustomWeaponsDataManager
-import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Rarity
 import me.night0721.nv.util.Util
 import me.night0721.nv.util.Util.capitalize
 import net.kyori.adventure.text.Component

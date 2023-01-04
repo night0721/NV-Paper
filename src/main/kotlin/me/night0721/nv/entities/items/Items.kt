@@ -1,6 +1,6 @@
 package me.night0721.nv.entities.items
 
-import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Rarity
 import org.bukkit.Material
 
 enum class Items(

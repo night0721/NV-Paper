@@ -1,6 +1,6 @@
 package me.night0721.nv.entities.pets
 
-import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Rarity
 import net.kyori.adventure.text.Component
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.goal.FloatGoal

@@ -4,7 +4,7 @@ import me.night0721.nv.NullValkyrie
 import me.night0721.nv.entities.corpses.Corpse
 import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
-import me.night0721.nv.entities.miners.Rarity
+import me.night0721.nv.util.Rarity
 import me.night0721.nv.game.packets.protocol.PacketPlayOutBlockBreakAnimation
 import me.night0721.nv.util.Util
 import net.kyori.adventure.text.Component
