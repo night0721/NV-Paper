@@ -6,7 +6,6 @@ import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.util.Rarity
 import me.night0721.nv.game.packets.protocol.PacketPlayOutBlockBreakAnimation
-import me.night0721.nv.util.Util
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
@@ -77,7 +76,7 @@ class CustomItemEvents : Listener {
                     player.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 10f, 10f)
                 } else if (name == Component.text().content("Snow Gun").color(Rarity.ULTRA.color).build()) {
                     val s = player.launchProjectile(Snowball::class.java, player.location.direction)
-                    val namecode = Util.colorOf((name as TextComponent).color()?.asHexString()!!) + name.content()
+                    val namecode = (name as TextComponent).content().filter { !it.isWhitespace() }
                     s.velocity = player.location.direction.multiply(10)
                     val weapon = player.inventory.itemInMainHand
                     val weaponMeta = weapon.itemMeta

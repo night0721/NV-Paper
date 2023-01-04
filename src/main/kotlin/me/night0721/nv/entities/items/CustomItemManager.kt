@@ -3,7 +3,6 @@ package me.night0721.nv.entities.items
 import me.night0721.nv.NullValkyrie
 import me.night0721.nv.database.CustomWeaponsDataManager
 import me.night0721.nv.util.Rarity
-import me.night0721.nv.util.Util
 import me.night0721.nv.util.Util.capitalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -104,7 +103,7 @@ object CustomItemManager {
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
             val key1 = NamespacedKey(NullValkyrie.getPlugin(), key)
-            keys[Util.colorOf(Rarity.getRarity(weapon["Rarity"] as String?).hex) + weapon["Name"] + "." + key] = key1
+            keys[(weapon["Name"] as String).filter { !it.isWhitespace() } + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
         item.itemMeta = itemMeta
