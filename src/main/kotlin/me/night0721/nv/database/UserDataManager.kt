@@ -6,10 +6,13 @@ import org.bson.conversions.Bson
 
 class UserDataManager {
     fun createUserBank(uuid: String?) {
-        val document = Document()
-        document["UUID"] = uuid
-        document["Bank"] = 0
-        DatabaseManager().users.insertOne(document)
+        val document = DatabaseManager().users.find(Document("UUID", uuid)).first()
+        if (document.isNullOrEmpty()) {
+            val d = Document()
+            d["UUID"] = uuid
+            d["Bank"] = 0
+            DatabaseManager().users.insertOne(d)
+        }
     }
 
     fun updateUserBank(uuid: String?, coins: Int, vararg listener: ScoreboardListener) {

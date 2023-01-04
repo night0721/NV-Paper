@@ -9,9 +9,12 @@ import org.bukkit.scoreboard.DisplaySlot
 class BelowNameManager {
     fun setBelowName(player: Player) {
         val board = player.scoreboard
-        val obj = board.registerNewObjective("HealthBar", Criteria.HEALTH, Component.text().content("❤").color(
-            NamedTextColor.RED).build())
-        obj.displaySlot = DisplaySlot.BELOW_NAME
-        player.scoreboard = board
+        val p = board.getObjective("P")
+        if (p == null) {
+            val objective = board.registerNewObjective("P", Criteria.DUMMY, Component.text("P", NamedTextColor.RED))
+            objective.displaySlot = DisplaySlot.BELOW_NAME
+            val score = objective.getScore(player.name)
+            score.score = 19
+        }
     }
 }

@@ -104,7 +104,6 @@ object CustomItemManager {
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
             val key1 = NamespacedKey(NullValkyrie.getPlugin(), key)
-            println(Util.colorOf(Rarity.getRarity(weapon["Rarity"] as String?).hex) + weapon["Name"] + "." + key)
             keys[Util.colorOf(Rarity.getRarity(weapon["Rarity"] as String?).hex) + weapon["Name"] + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }

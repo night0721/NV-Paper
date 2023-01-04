@@ -42,7 +42,54 @@ open class CryptoMiner(
     val lastclaim: Long,
     val location: Location
 ) {
-
+    private var taskId: Int? = null
+    private fun runGenerate() {
+        var count = 0
+        taskId = object : BukkitRunnable() {
+            override fun run() {
+                generate()
+                count++
+                if (count == 24) {
+                    count = 0
+                    Bukkit.getScheduler().cancelTask(taskId)
+                    object : BukkitRunnable() {
+                        override fun run() {
+                            run {
+                                var x = this@CryptoMiner.location.x.toInt() - 2
+                                while (x <= this@CryptoMiner.location.x + 2) {
+                                    run {
+                                        var z = this@CryptoMiner.location.z.toInt() - 2
+                                        while (z <= this@CryptoMiner.location.z + 2) {
+                                            run {
+                                                var y = this@CryptoMiner.location.y.toInt() - 1
+                                                while (y <= this@CryptoMiner.location.y - 1) {
+                                                    this@CryptoMiner.location.y = 133.0
+                                                    if (this@CryptoMiner.location.world.getBlockAt(
+                                                            x,
+                                                            y,
+                                                            z
+                                                        ) != this@CryptoMiner.location.clone()
+                                                            .subtract(0.0, 1.0, 0.0).block
+                                                    ) {
+                                                        this@CryptoMiner.location.world.getBlockAt(x, y, z).type =
+                                                            getType()
+                                                    }
+                                                    y++
+                                                }
+                                            }
+                                            z++
+                                        }
+                                    }
+                                    x++
+                                }
+                            }
+                        }
+                    }.runTaskLater(NullValkyrie.getPlugin(), 10L)
+                    runGenerate()
+                }
+            }
+        }.runTaskTimer(NullValkyrie.getPlugin(), 0, 60).taskId
+    }
 
     fun getType(): Material {
         return minerType!!.material
@@ -51,6 +98,7 @@ open class CryptoMiner(
     fun spawn(player: Player) {
         val stand = ArmorStand((location.world as CraftWorld).handle, location.x + 0.5, location.y, location.z + 0.5)
         stand.isInvulnerable = true
+        stand.isNoGravity = true
         val head = org.bukkit.inventory.ItemStack(Material.PLAYER_HEAD, 1)
         val meta = head.itemMeta as SkullMeta
         val profile = GameProfile(UUID.randomUUID(), null)
@@ -95,11 +143,7 @@ open class CryptoMiner(
         watcher.set(EntityDataAccessor(5, EntityDataSerializers.BOOLEAN), true)
         watcher.set(EntityDataAccessor(15, EntityDataSerializers.BYTE), 13.toByte())
         PacketPlayOutEntityMetadata(player, stand, watcher)
-        object : BukkitRunnable() {
-            override fun run() {
-                generate()
-            }
-        }.runTaskTimer(NullValkyrie.getPlugin(), 0, 40)
+        runGenerate()
     }
 
     fun generate() {
@@ -113,7 +157,7 @@ open class CryptoMiner(
                         run {
                             var y = this.location.y.toInt() - 1
                             while (y <= this.location.y - 1) {
-                                this.location.y = 17.0
+                                this.location.y = 133.0
                                 if (this.location.world.getBlockAt(x, y, z).type == this.getType()) {
                                     locs.add(this.location.world.getBlockAt(x, y, z).location)
                                 }

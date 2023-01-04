@@ -8,7 +8,7 @@ import org.bukkit.Bukkit
 import java.util.*
 
 object RankDataManager {
-    fun setRank(uuid: UUID, rank: Rank, vararg listener: ScoreboardListener) {
+    fun setRank(uuid: UUID, rank: Rank) {
         // TODO: fix not working in rank command
         val document = DatabaseManager().ranks.find(Document("UUID", uuid.toString())).first()
         if (document != null) {
@@ -23,8 +23,8 @@ object RankDataManager {
         }
         for (player in Bukkit.getOnlinePlayers()) {
             if (player.hasPlayedBefore()) {
-                listener[0].nameTagManager.removeTag(player)
-                listener[0].nameTagManager.newTag(player)
+                ScoreboardListener.nameTagManager.removeTag(player)
+                ScoreboardListener.nameTagManager.newTag(player)
             }
         }
     }

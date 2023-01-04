@@ -1,6 +1,7 @@
 package me.night0721.nv.events.listeners
 
 import me.night0721.nv.NullValkyrie
+import me.night0721.nv.entities.corpses.Corpse
 import me.night0721.nv.entities.items.CustomItemManager
 import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.entities.miners.Rarity
@@ -239,6 +240,8 @@ class CustomItemEvents : Listener {
             val player = e.entity as Player
             if ((player.health - e.damage) <= 0) {
                 e.isCancelled = true
+                player.health = 20.0
+                Corpse(player)
                 val loc = Location(Bukkit.getWorld("world"), 139.5, 133.0, 635.5)
                 player.teleport(loc)
                 for (p in Bukkit.getOnlinePlayers()) {
@@ -253,7 +256,6 @@ class CustomItemEvents : Listener {
                         for (p in Bukkit.getOnlinePlayers()) {
                             p.showPlayer(NullValkyrie.getPlugin(), player)
                         }
-                        player.health = 20.0
                     }
                 }.runTaskLater(NullValkyrie.getPlugin(), 100L)
                 countDown(player, intArrayOf(5))

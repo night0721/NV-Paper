@@ -17,10 +17,11 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class ScoreboardListener : Listener {
-    val nameTagManager: NameTagManager = NameTagManager()
     val sideBarManager: SideBarManager = SideBarManager()
     private val belowNameManager: BelowNameManager = BelowNameManager()
-
+    companion object {
+        val nameTagManager: NameTagManager = NameTagManager()
+    }
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
         val player = e.player
@@ -39,7 +40,7 @@ class ScoreboardListener : Listener {
                     )
                 )
             )
-            RankDataManager.setRank(player.uniqueId, Rank.ROOKIE, this)
+            RankDataManager.setRank(player.uniqueId, Rank.ROOKIE)
             UserDataManager().createUserBank(e.player.uniqueId.toString())
         }
         e.player.sendPlayerListHeader(
