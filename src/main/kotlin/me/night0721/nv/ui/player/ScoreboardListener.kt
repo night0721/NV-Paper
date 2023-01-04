@@ -26,7 +26,7 @@ class ScoreboardListener : Listener {
     fun onJoin(e: PlayerJoinEvent) {
         val player = e.player
         if (!player.hasPlayedBefore()) {
-            e.player.setResourcePack("https://www.dropbox.com/s/7y7p93xzhar6vvw/%C2%A7b%C2%A7lNKRP%201.19.3.zip?dl=1", "4bc4e51c9cd77eff3408d44642cc8c088527fc79")
+            e.player.setResourcePack("https://www.dropbox.com/s/h12f0b4z78bufgb/%C2%A7b%C2%A7lNKRP.zip?dl=0", "4bc4e51c9cd77eff3408d44642cc8c088527fc79")
             e.player.showTitle(
                 Title.title(
                     Component.text()
