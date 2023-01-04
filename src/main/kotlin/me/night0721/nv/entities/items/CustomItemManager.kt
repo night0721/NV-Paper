@@ -15,7 +15,6 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 object CustomItemManager {
-    val keys = HashMap<String?, NamespacedKey?>()
 
     @Suppress("unchecked_cast")
     fun produceItem(itemName: String?): ItemStack {
@@ -103,7 +102,6 @@ object CustomItemManager {
         for (key in pdcdata!!.keys) {
             val container = itemMeta.persistentDataContainer
             val key1 = NamespacedKey(NullValkyrie.getPlugin(), key)
-            keys[(weapon["Name"] as String).filter { !it.isWhitespace() } + "." + key] = key1
             container.set(key1, PersistentDataType.INTEGER, pdcdata[key] as Int)
         }
         item.itemMeta = itemMeta

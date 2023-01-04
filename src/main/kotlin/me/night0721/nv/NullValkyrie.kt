@@ -44,7 +44,6 @@ class NullValkyrie : JavaPlugin() {
 }
 // TODO: level system for miners
 // TODO: add comments to functions so docs can be generated
-// TODO: Add corpse body when player dies
 // TODO: vault to store item
 // TODO: withdraw command
 // TODO: deposit command
@@ -58,4 +57,3 @@ class NullValkyrie : JavaPlugin() {
 // TODO: rewards when reached milestones, quests
 // TODO: teleportation to different places, to different npcs, hub
 // TODO: using pdc to store quests, skills, abilities, etc
-// TODO: guilds

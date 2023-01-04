@@ -7,7 +7,6 @@ import me.night0721.nv.entities.items.Pickaxe
 import me.night0721.nv.util.Rarity
 import me.night0721.nv.game.packets.protocol.PacketPlayOutBlockBreakAnimation
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.kyori.adventure.title.Title
@@ -76,19 +75,18 @@ class CustomItemEvents : Listener {
                     player.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 10f, 10f)
                 } else if (name == Component.text().content("Snow Gun").color(Rarity.ULTRA.color).build()) {
                     val s = player.launchProjectile(Snowball::class.java, player.location.direction)
-                    val namecode = (name as TextComponent).content().filter { !it.isWhitespace() }
                     s.velocity = player.location.direction.multiply(10)
                     val weapon = player.inventory.itemInMainHand
                     val weaponMeta = weapon.itemMeta
                     if (weaponMeta != null) {
                         val container = weaponMeta.persistentDataContainer
-                        val ammoKey = CustomItemManager.keys["$namecode.ammo"]
-                        val ammo = if (container.get(ammoKey!!, PersistentDataType.INTEGER) != null) container.get(
+                        val ammoKey = NamespacedKey(NullValkyrie.getPlugin(), "ammo")
+                        val ammo = if (container.get(ammoKey, PersistentDataType.INTEGER) != null) container.get(
                             ammoKey, PersistentDataType.INTEGER
                         )!! else 0
                         container.set(ammoKey, PersistentDataType.INTEGER, ammo - 1)
                         val max =
-                            CustomItemManager.keys["$namecode.max"]?.let { container.get(it, PersistentDataType.INTEGER) }!!
+                            NamespacedKey(NullValkyrie.getPlugin(), "max").let { container.get(it, PersistentDataType.INTEGER) }!!
                         weapon.itemMeta = weaponMeta
                         e.player.sendActionBar(
                             LegacyComponentSerializer.legacyAmpersand()

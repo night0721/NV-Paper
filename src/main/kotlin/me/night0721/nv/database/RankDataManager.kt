@@ -9,7 +9,6 @@ import java.util.*
 
 object RankDataManager {
     fun setRank(uuid: UUID, rank: Rank) {
-        // TODO: fix not working in rank command
         val document = DatabaseManager().ranks.find(Document("UUID", uuid.toString())).first()
         if (document != null) {
             val updated: Bson = Document("Rank", rank.name)
