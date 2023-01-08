@@ -1,5 +1,6 @@
 package me.night0721.nv.commands
 
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -20,26 +21,30 @@ class ItemCommand : Command("item", arrayOf(), "Items", "") {
             item2.itemMeta = itemMeta2
             sender.inventory.addItem(item2)
 
-            val pris = ItemStack(Material.EMERALD_ORE)
+            val pris = ItemStack(Material.ITEM_FRAME)
             val prismeta = pris.itemMeta!!
+            prismeta.displayName(Component.text().content("Lucky Block").build())
             prismeta.setCustomModelData(7777777)
             pris.itemMeta = prismeta
             sender.inventory.addItem(pris)
 
-            val pris2 = ItemStack(Material.EMERALD_ORE)
+            val pris2 = ItemStack(Material.ITEM_FRAME)
             val prismeta2 = pris2.itemMeta!!
+            prismeta2.displayName(Component.text().content("Ruby Ore").build())
             prismeta2.setCustomModelData(7777778)
             pris2.itemMeta = prismeta2
             sender.inventory.addItem(pris2)
 
-            val pris3 = ItemStack(Material.EMERALD_ORE)
+            val pris3 = ItemStack(Material.ITEM_FRAME)
             val prismeta3 = pris3.itemMeta!!
+            prismeta3.displayName(Component.text().content("Ruby Block").build())
             prismeta3.setCustomModelData(7777779)
             pris3.itemMeta = prismeta3
             sender.inventory.addItem(pris3)
 
             val cmd = ItemStack(Material.COMMAND_BLOCK)
             val cmdmeta = cmd.itemMeta!!
+            cmdmeta.displayName(Component.text().content("Ruby").build())
             cmdmeta.setCustomModelData(7777777)
             cmd.itemMeta = cmdmeta
             sender.inventory.addItem(cmd)
